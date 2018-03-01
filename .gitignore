@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+#Directories
+dir_to_ignore/\Project Timeline\Library
