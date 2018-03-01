@@ -32,6 +32,7 @@
 *.app
 
 #Directories
-dir_to_ignore/\Project Timeline\Library
+dir_to_ignore/
 Project Timeline/Temp/
 Project Timeline/Library/
+Project Timeline/UnityPackageManager/
