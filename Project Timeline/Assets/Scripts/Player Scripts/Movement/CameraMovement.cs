@@ -19,6 +19,11 @@ public class CameraMovement : MonoBehaviour {
     public float sensitivity = 1.0f;
     public float horizontalSpeed = 0.0f;
     public float verticalSpeed = 0.0f;
+    
+    public float minimumX = -360F;
+    public float maximumX = 360F;
+    public float minimumY = -60F;
+    public float maximumY = 60F;
 
     // Use this for initialization
     void Start () {
@@ -39,14 +44,10 @@ public class CameraMovement : MonoBehaviour {
 
         if (invertYAxis) { invertY = -1; }
         else invertY = 1;
-
-         
-
-
+        
         horizontalSpeed = values.camHorizontalSpeed * sensitivity * inputs.mouseX * invertX;
         verticalSpeed = values.camVerticalSpeed * sensitivity * inputs.mouseY * invertY;
-
-
+        
         player.transform.Rotate(horizontalSpeed * Vector3.up * dt);//Horizontally, we rotate the player, not the camera.
         transform.Rotate(verticalSpeed * Vector3.left * dt); 
     }

@@ -7,8 +7,9 @@ public class CycleThroughObjects : MonoBehaviour {
     public int timeLayer = 9;
     public List<GameObject> objectsInTimeLayer;
     private TimeScaleControl timeScaleControl;
+    public int iterated = 0;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
         timeScaleControl = gameObject.GetComponent<TimeScaleControl>();
         GameObject[] goArray = FindObjectsOfType<GameObject>();
@@ -17,6 +18,7 @@ public class CycleThroughObjects : MonoBehaviour {
             if(goArray[i].layer == timeLayer)
             {
                 objectsInTimeLayer.Add(goArray[i]);
+                iterated++;
             }
         }
         

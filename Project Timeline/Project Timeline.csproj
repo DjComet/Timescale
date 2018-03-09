@@ -385,11 +385,13 @@
     <Compile Include="Assets\Scripts\Environment Scripts\Ladders.cs" />
     <Compile Include="Assets\Scripts\Environment Scripts\LiftPlatformMovement.cs" />
     <Compile Include="Assets\Scripts\Environment Scripts\WaypointPlatformMovement.cs" />
+    <Compile Include="Assets\Scripts\Interface Scripts\CameraEffectsController.cs" />
     <Compile Include="Assets\Scripts\Level Scripts\ObjectSimpleMovement.cs" />
     <Compile Include="Assets\Scripts\Level Scripts\ScaledDeltaTime.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Garbage Disposal\Air.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Inputs.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\MainPlayerController.cs" />
+    <Compile Include="Assets\Scripts\Player Scripts\Movement\CameraClampMovement.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Movement\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Movement\InteractionWithMovingPlatforms.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Movement\Jump.cs" />
@@ -398,6 +400,7 @@
     <Compile Include="Assets\Scripts\Player Scripts\Movement\WallClimb.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Movement\WallClimbMethod2.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\CycleThroughObjects.cs" />
+    <Compile Include="Assets\Scripts\Player Scripts\Time Control\RewindScript.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\TimeScaleControl.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Values.cs" />
     <Compile Include="Assets\Scripts\PortalScripts\PortalView.cs" />
