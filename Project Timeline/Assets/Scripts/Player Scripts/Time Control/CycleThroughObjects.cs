@@ -36,7 +36,28 @@ public class CycleThroughObjects : MonoBehaviour {
 
         foreach(GameObject go in objectsInTimeLayer)
         {
-            go.GetComponent<ScaledDeltaTime>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
+            if (go.GetComponent<ScaledDeltaTime>() != null)
+            {
+                go.GetComponent<ScaledDeltaTime>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
+                go.GetComponent<ScaledDeltaTime>().ownTimeScale = timeScaleControl.ownTimeScale;
+                go.GetComponent<ScaledDeltaTime>().actualTarget = timeScaleControl.targetValue;
+            }
+
+
+            if (go.GetComponent<RewindScript>() != null)
+            {
+                if (timeScaleControl.rewindHasBeenPressed)
+                {
+                    go.GetComponent<RewindScript>().isRewinding = true;
+                }
+                else 
+                {
+                    go.GetComponent<RewindScript>().isRewinding = false;
+                }
+            }
+
+
+            
         }
 
 	}

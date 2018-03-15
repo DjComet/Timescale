@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScaledDeltaTime : MonoBehaviour {
 
     public float actualTarget;
+    public float ownTimeScale;
     public float scaledDT;
 
 	// Use this for initialization

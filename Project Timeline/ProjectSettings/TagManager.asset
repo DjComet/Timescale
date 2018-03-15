@@ -8,6 +8,7 @@ TagManager:
   - Ladder
   - CanGoThroughPortals
   - PlayerCanvas
+  - TimeManager
   layers:
   - Default
   - TransparentFX

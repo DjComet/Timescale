@@ -34,8 +34,7 @@ public class ObjectSimpleMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        int right, up, forward;
-
+        int right, up, forward; 
         right = (isRight ? 1 : 0);
         up = (isUp ? 1 : 0);
         forward = (isForward ? 1 : 0);

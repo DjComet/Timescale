@@ -44,9 +44,11 @@ public class TimeScaleControl : MonoBehaviour {
     public bool slowHasBeenPressed = false;
     public bool pauseHasBeenPressed = false;
     public bool rewindHasBeenPressed = false;
+    bool notSet = true;
 
     // Use this for initialization
     void Start () {
+        i = 3;//Normal Time Target Value
         inputs = gameObject.GetComponent<Inputs>();
         playerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
         energy = new EnergyMeter();
@@ -69,6 +71,7 @@ public class TimeScaleControl : MonoBehaviour {
                 mouseClickHint = child.GetComponent<Text>();
             }
         }
+        targetValue = timeValues[i];
     }
 	
 	// Update is called once per frame
@@ -130,6 +133,7 @@ public class TimeScaleControl : MonoBehaviour {
                 slowHasBeenPressed = false;
                 pauseHasBeenPressed = false;
                 rewindHasBeenPressed = true;
+                notSet = true;
             }
         }
         else if (inputs.actionLeft && inputs.leftClick)//PAUSE
@@ -162,7 +166,11 @@ public class TimeScaleControl : MonoBehaviour {
             maxSlidingSpeed *= -1;
 
 
-
+        if(targetValue >=0 && previousTargetValue == -1 && notSet)
+        {
+            ownTimeScale = 0;
+            notSet = false;
+        }
 
         if (ownTimeScale != targetValue)
         {
