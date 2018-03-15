@@ -285,6 +285,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CopyRoom.cs" />
+    <Compile Include="Assets\FindOtherPortal.cs" />
+    <Compile Include="Assets\onTrigger.cs" />
     <Compile Include="Assets\Packs\Battlehub\Integration\IntegrationCommon.cs" />
     <Compile Include="Assets\Packs\Battlehub\Integration\MeshCombinerIntegration.cs" />
     <Compile Include="Assets\Packs\Battlehub\Integration\MeshDeformerIntegration.cs" />
@@ -381,6 +384,7 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
+    <Compile Include="Assets\Scripts\Environment Scripts\AxisRotation.cs" />
     <Compile Include="Assets\Scripts\Environment Scripts\InvisibilityOnPlay.cs" />
     <Compile Include="Assets\Scripts\Environment Scripts\Ladders.cs" />
     <Compile Include="Assets\Scripts\Environment Scripts\LiftPlatformMovement.cs" />
@@ -401,11 +405,13 @@
     <Compile Include="Assets\Scripts\Player Scripts\Movement\WallClimbMethod2.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\CombinedPositiveAndRewind.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\CycleThroughObjects.cs" />
+    <Compile Include="Assets\Scripts\Player Scripts\Time Control\OtherPositiveTimeScale.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\PositiveTimeScript.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\RewindScript.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Time Control\TimeScaleControl.cs" />
     <Compile Include="Assets\Scripts\Player Scripts\Values.cs" />
     <Compile Include="Assets\Scripts\PortalScripts\PortalView.cs" />
+    <Compile Include="Assets\Scripts\PortalScripts\RoomsControl.cs" />
     <Compile Include="Assets\Scripts\PortalScripts\StepThroughPortal.cs" />
     <Compile Include="Assets\Scripts\ShowFps.cs" />
     <Compile Include="Assets\Scripts\TimeManagerScript.cs" />

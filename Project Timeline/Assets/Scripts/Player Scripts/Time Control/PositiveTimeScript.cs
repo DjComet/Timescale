@@ -23,6 +23,8 @@ public class PositiveTimeScript : MonoBehaviour {
     private float ownTimescale;
     public float previousTimeScale;
     public float timeScaleDifferential;
+
+    public bool reapplyForces = false;
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody>();
@@ -31,7 +33,7 @@ public class PositiveTimeScript : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 
         dt = scaledDeltaTime.scaledDT;
         ownTimescale = scaledDeltaTime.ownTimeScale;//newTimeScale
@@ -39,6 +41,14 @@ public class PositiveTimeScript : MonoBehaviour {
 
         timeScaleDifferential = Mathf.Abs(ownTimescale / previousTimeScale);
 
+        /*if(timeScaleDifferential > 1)
+        {
+            useDifferential = false;
+        }
+        else
+        {
+            useDifferential = true;
+        }*/
         
 
         velocityMagnitude = Vector3.Magnitude(rb.velocity);
@@ -47,7 +57,7 @@ public class PositiveTimeScript : MonoBehaviour {
         angVelocity = rb.angularVelocity;
 
         if (ownTimescale == 1)
-        {
+        {//If Normal time
             rb.isKinematic = false;
 
             previousMass = rb.mass;
@@ -58,12 +68,13 @@ public class PositiveTimeScript : MonoBehaviour {
            
         }
         else if (ownTimescale == 0 && scaledDeltaTime.actualTarget == 0)
-        {
+        {//if PAUSED
             //Debug.Log("Co que cojones");
             rb.isKinematic = true;
+            reapplyForces = true;
         }
-        else if (ownTimescale > 0 && ownTimescale < 1 && scaledDeltaTime.actualTarget == 0.2f)
-        {
+        else if ((ownTimescale > 0 && ownTimescale < 1) && (scaledDeltaTime.actualTarget == 0.2f || scaledDeltaTime.actualTarget == 0))
+        {//if going to PAUSE or going to SLOW
             rb.isKinematic = false;
 
             if(useDifferential)
@@ -78,19 +89,14 @@ public class PositiveTimeScript : MonoBehaviour {
             {
                 rb.mass = previousMass / ownTimescale;
                 rb.velocity = previousVelocity * ownTimescale;
+                rb.velocity += Physics.gravity * ownTimescale;
                 rb.angularVelocity = previousAngVelocity * ownTimescale;
                 //rb.drag = previousDrag / ownTimescale;
                 //rb.angularDrag = previousAngDrag / ownTimescale;
-
-            }
-            
-
-
-
-            
+            }    
         }
         else if(ownTimescale > 1)
-        {
+        {//if ACCELERATING
             if (useDifferential)
             {
                 rb.mass /= timeScaleDifferential;
@@ -106,7 +112,16 @@ public class PositiveTimeScript : MonoBehaviour {
             }
         }
         
-
+        if(scaledDeltaTime.previousTarget == 0 && scaledDeltaTime.actualTarget > 0)
+        {//if just unpaused
+            if (reapplyForces)
+            {
+                rb.mass = previousMass;
+                rb.velocity = previousVelocity;
+                rb.angularVelocity = previousAngVelocity;
+                reapplyForces = false;
+            }
+        }
         
 
         previousTimeScale = ownTimescale;//this stores the previous ownTimeScale value for the next frame.

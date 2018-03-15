@@ -32,7 +32,7 @@ public class TimeScaleControl : MonoBehaviour {
     public float ownTimeScale = 1.0f;
     private float maxTimeMultiplierValue = 2.0f;
     private float minTimeMultiplierValue = -1.0f;
-    private float previousTargetValue;
+    public float previousTargetValue;
     
     int i = 3; //3 is the position of the value 1, which implies normal time flow (ownTimeScale is multiplied by 1).
 

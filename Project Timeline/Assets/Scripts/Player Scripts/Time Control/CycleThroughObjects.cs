@@ -41,6 +41,7 @@ public class CycleThroughObjects : MonoBehaviour {
                 go.GetComponent<ScaledDeltaTime>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
                 go.GetComponent<ScaledDeltaTime>().ownTimeScale = timeScaleControl.ownTimeScale;
                 go.GetComponent<ScaledDeltaTime>().actualTarget = timeScaleControl.targetValue;
+                go.GetComponent<ScaledDeltaTime>().previousTarget = timeScaleControl.previousTargetValue;
             }
 
 

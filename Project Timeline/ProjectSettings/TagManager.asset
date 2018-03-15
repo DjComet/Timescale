@@ -9,6 +9,12 @@ TagManager:
   - CanGoThroughPortals
   - PlayerCanvas
   - TimeManager
+  - PortalA
+  - PortalB
+  - OriginalRoom
+  - CopyRoom
+  - OriginalRoomChange
+  - CopyRoomChange
   layers:
   - Default
   - TransparentFX
