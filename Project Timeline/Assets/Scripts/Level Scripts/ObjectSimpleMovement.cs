@@ -39,7 +39,11 @@ public class ObjectSimpleMovement : MonoBehaviour {
         up = (isUp ? 1 : 0);
         forward = (isForward ? 1 : 0);
 
-        dt = scaledDeltaTime.scaledDT;
+        if (scaledDeltaTime != null)
+            dt = scaledDeltaTime.scaledDT;
+        else
+            dt = Time.deltaTime;
+
         axis = transform.right * right + transform.up * up + transform.forward * forward;
         sine();
 	}

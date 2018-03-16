@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AxisRotation : MonoBehaviour {
-
+    float dt;
     private ScaledDeltaTime scaledDeltaTime;
 
     public bool sameRotationOnAllAxis = false;
@@ -24,14 +24,28 @@ public class AxisRotation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float dt = Time.deltaTime * scaledDeltaTime.ownTimeScale;
-        if(sameRotationOnAllAxis)
+
+        if (scaledDeltaTime != null)
+            dt = scaledDeltaTime.scaledDT;
+        else
+            dt = Time.deltaTime;
+        
+
+        float rotX = (rotationX ? 1 : 0);
+        float rotY = (rotationY ? 1 : 0);
+        float rotZ = (rotationZ ? 1 : 0);
+
+
+
+
+
+        if (sameRotationOnAllAxis)
         {
-            transform.Rotate((rotationX ? rotationForAllAxis * dt : 0f), (rotationY ? rotationForAllAxis * dt : 0f), (rotationZ ? rotationForAllAxis * dt : 0f));
+            transform.Rotate(rotX * Mathf.Rad2Deg * rotationForAllAxis * dt, rotY * Mathf.Rad2Deg * rotationForAllAxis * dt, rotZ * Mathf.Rad2Deg * rotationForAllAxis * dt);
         }
         else
         {
-            transform.Rotate((rotationX ? rotationSpeedX * dt : 0f), (rotationY ? rotationSpeedY * dt : 0f), (rotationZ ? rotationSpeedZ * dt : 0f));
+            transform.Rotate(rotX * Mathf.Rad2Deg * rotationSpeedX * dt, rotY * Mathf.Rad2Deg * rotationSpeedY * dt, rotZ * Mathf.Rad2Deg * rotationSpeedZ * dt);
         }
         
 
