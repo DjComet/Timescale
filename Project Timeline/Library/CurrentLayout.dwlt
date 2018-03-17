@@ -45,7 +45,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 87
+  controlID: 74
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -89,8 +89,8 @@ MonoBehaviour:
     y: 0
     width: 216
     height: 572
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 88
+  controlID: 10
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -327,19 +327,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/_Levels
+    - Assets/Art/Materials
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/_Levels
+  - Assets/Art/Materials
   m_LastFoldersGridSize: -1
   m_LastProjectPath: E:\Unity\Timescale\Project Timeline
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: b6420000
-    m_LastClickedID: 17078
-    m_ExpandedIDs: 00000000224200001e4300002a43000046430000e4430000f047000000ca9a3bffffff7f
+    m_SelectedIDs: 38290000
+    m_LastClickedID: 10552
+    m_ExpandedIDs: 0000000032290000002b0000142c00003e2c0000b62d00001c33000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -367,7 +367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000224200001e4300002a43000046430000e4430000f0470000
+    m_ExpandedIDs: 0000000032290000002b0000142c00003e2c0000b62d00001c330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -487,7 +487,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 6a47edffce48edff0a4bedff6c4dedff8c55edff1257edff5058edff045aedff48a6f1ffda56f2ff4a60f2ff0865f2ff4666f2ffcc67f2ffc868f2fffc6af2ff926cf2ff127af2ff4c7bf2ff867cf2ffa880f2ff5084f2ffca87f2ff2c91f2ffaa93f2ffca94f2fff498f2ff649af2ff8e9bf2ff04a7f2fff6abf2ff44adf2ff92aef2fff0e5f2ff2eecf2ff90f6f2ffd4f7f2ff02f9f2ff9cf9f2ff34faf2ffc8faf2ffeafbf2ff28fdf2ff6afef2ffb8fff2fffa00f3ff3cf2f3ff0e0df7ffc818f7ff309dfbff322afcffbcaffcff96d9fcff7e43fdffd624feff6c2efeff0073fefff2b4fefff257ffffb671ffffb6a5ffffecaaffff000000008a720000
+    m_ExpandedIDs: 2acff4ff72e3f4ffe213f5fff8fcf5ffbcf4f6ff746af7fff29ff7ffe09bf8ff20f0f8ffdefdf8ff9810f9ffd412f9ff6a14f9ff7a21f9ffb022f9ffde23f9ff2c25f9ff6227f9ff3001feffc670feff7ec0ffffd0eeffff60f1ffff38f3ffffc6f4ffff98fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -506,7 +506,7 @@ MonoBehaviour:
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
   m_ExpandedScenes:
-  - Tutorial01
+  - Tutorial04
   m_CurrenRootInstanceID: 0
   m_Locked: 0
   m_CurrentSortingName: TransformSorting
@@ -538,14 +538,14 @@ MonoBehaviour:
     height: 551
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 5134.709960626466
+  lastFramingTime: 14617.281530938713
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -74.75698, y: 49.9597, z: -70.37995}
+    m_Target: {x: -1.1767042, y: 1.7262726, z: -2.6382618}
     speed: 2
-    m_Value: {x: -74.75698, y: 49.9597, z: -70.37995}
+    m_Value: {x: -1.1767042, y: 1.7262726, z: -2.6382618}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -569,13 +569,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.19018571, y: 0.5508638, z: -0.13062167, w: 0.80207014}
+    m_Target: {x: 0.047884483, y: -0.9148342, z: 0.38445225, w: 0.11393797}
     speed: 2
-    m_Value: {x: 0.19018571, y: 0.5508638, z: -0.13062167, w: 0.80207014}
+    m_Value: {x: 0.047884487, y: -0.91483426, z: 0.38445228, w: 0.113937974}
   m_Size:
-    m_Target: 21.352499
+    m_Target: 22
     speed: 2
-    m_Value: 21.352499
+    m_Value: 22
   m_Ortho:
     m_Target: 0
     speed: 2
