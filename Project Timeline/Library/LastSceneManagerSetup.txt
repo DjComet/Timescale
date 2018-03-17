@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/_Levels/Test Levels/Time control Tests.unity
+=======
+- path: Assets/_Levels/Tutorial04.unity
+>>>>>>> 4fd5c10b38fdcd607ca568c3d7285184f6cb1bbe
   isLoaded: 1
   isActive: 1
