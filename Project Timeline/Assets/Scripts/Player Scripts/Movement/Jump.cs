@@ -77,7 +77,16 @@ public class Jump : MonoBehaviour {
         else if(!playerController.isOnLadder)
             speed.y = -values.stickToGroundForce;
 
-        if (!values.grounded && !canMaintainJump)//If it's not on the ground and it's not currently jumping
+        
+        //aqui es el salto de verdad
+        if (inputs.jumpBool && allowJump)
+        {
+            jumpForce = values.maxJumpForce;
+            values.jumpDeceleration = values.maxJumpDeceleration;
+            canMaintainJump = true;
+            allowJump = false;
+        }
+        else if (!values.grounded && !canMaintainJump)//If it's not on the ground and it's not currently jumping
         {
             coyoteTimer += dt;
 
@@ -87,14 +96,6 @@ public class Jump : MonoBehaviour {
                 coyoteTimer = 0.0f;
             }
 
-        }
-        //aqui es el salto de verdad
-        if (inputs.jumpBool && allowJump)
-        {
-            jumpForce = values.maxJumpForce;
-            values.jumpDeceleration = values.maxJumpDeceleration;
-            canMaintainJump = true;
-            allowJump = false;
         }
 
         if (inputs.jump && canMaintainJump)//the deceleration decreases the longer you hold jump button, so you jump higher.

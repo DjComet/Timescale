@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScaledDeltaTime : MonoBehaviour {
+public class ObjectTimeLine : MonoBehaviour {
 
     public float actualTarget;
     public float previousTarget;

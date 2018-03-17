@@ -22,10 +22,7 @@ public class EnergyMeter {
 public class TimeScaleControl : MonoBehaviour {
     float dt;
     private Inputs inputs;
-    private GameObject playerCanvas;
-    private Text timeMultIndicator;
-    private Text mouseClickHint;
-    private EnergyMeter energy;
+    public EnergyMeter energy;
 
     public float[] timeValues;
     public float targetValue;
@@ -34,7 +31,7 @@ public class TimeScaleControl : MonoBehaviour {
     private float minTimeMultiplierValue = -1.0f;
     public float previousTargetValue;
     
-    int i = 3; //3 is the position of the value 1, which implies normal time flow (ownTimeScale is multiplied by 1).
+    public int i = 3; //3 is the position of the value 1, which implies normal time flow (ownTimeScale is multiplied by 1).
 
     public float maxSlidingSpeed = 1f;
     public float slidingAcceleration = 2.5f;
@@ -50,27 +47,8 @@ public class TimeScaleControl : MonoBehaviour {
     void Start () {
         i = 3;//Normal Time Target Value
         inputs = gameObject.GetComponent<Inputs>();
-        playerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
         energy = new EnergyMeter();
-        for (int i = 0; i < playerCanvas.transform.childCount; i++)
-        {
-            GameObject child = playerCanvas.transform.GetChild(i).gameObject;
-            if (child.name == "TimeMultIndicator")
-            {
-                timeMultIndicator = child.GetComponent<Text>();
-            }
-            else if (child.name == "EnergySlider")
-            {
-                energy.slider = child.GetComponent<Slider>();
-                energy.slider.maxValue = energy.maxEnergyAmt;
-                
-                energy.energyAmount = energy.maxEnergyAmt;
-            }
-            else if(child.name == "MouseClickHint")
-            {
-                mouseClickHint = child.GetComponent<Text>();
-            }
-        }
+        energy.energyAmount = energy.maxEnergyAmt;
         targetValue = timeValues[i];
     }
 	
@@ -190,7 +168,7 @@ public class TimeScaleControl : MonoBehaviour {
         else slidingSpeed = 0;
 
         energyCalculation();
-        changeUI();
+        
         
     }
 
@@ -224,38 +202,5 @@ public class TimeScaleControl : MonoBehaviour {
             i = 3;
         }
     }
-    void changeUI()
-    {
-        switch (i)
-        {
-            case 0:
-                timeMultIndicator.text = ("<< REWIND");
-                break;
-            case 1:
-                timeMultIndicator.text = ("|| PAUSE");
-                break;
-            case 2:
-                timeMultIndicator.text = ("|> SLOW");
-                break;
-            case 3:
-                timeMultIndicator.text = (" > NORMAL");
-                break;
-            case 4:
-                timeMultIndicator.text = (">> FAST FORWARD");
-                break;
-        }
-
-        energy.slider.value = energy.energyAmount;
-
-        if (inputs.leftClick)
-        {
-            mouseClickHint.text = ("Q: ||         E: |>\nPause      Slow  ");
-        }
-        else if (inputs.rightClick)
-        {
-            mouseClickHint.text = ("Q: <<         E: >>\n    Rewind    Accelerate  ");
-        }
-        else mouseClickHint.text = ("");
-        
-    }
+    
 }

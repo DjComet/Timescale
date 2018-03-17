@@ -3,128 +3,106 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PositiveTimeScript : MonoBehaviour {
-    float dt;
 
-    public bool useDifferential;
+    bool first = true;
+    bool applied = true;
     private Rigidbody rb;
-    private ScaledDeltaTime scaledDeltaTime;
+    private ObjectTimeLine objectTimeline;
+    public float direction;
 
     private Vector3 previousVelocity;
     private Vector3 previousAngVelocity;
     private float previousMass;
-    private float previousDrag;
-    private float previousAngDrag;
 
-    public float velocityMagnitude;
-    public Vector3 velocity;
-    public float angularMagnitude;
-    public Vector3 angVelocity;
 
-    private float ownTimescale;
-    public float previousTimeScale;
-    public float timeScaleDifferential;
-
-    public bool reapplyForces = false;
-    // Use this for initialization
-    void Start () {
-        rb = gameObject.GetComponent<Rigidbody>();
-        scaledDeltaTime = gameObject.GetComponent<ScaledDeltaTime>();
-        
-    }
-	
-	// Update is called once per frame
-	void Update () {
-
-        dt = scaledDeltaTime.scaledDT;
-        ownTimescale = scaledDeltaTime.ownTimeScale;//newTimeScale
-        
-
-        timeScaleDifferential = Mathf.Abs(ownTimescale / previousTimeScale);
-
-        /*if(timeScaleDifferential > 1)
+    [SerializeField]
+    private float _timeScale = 1;
+    public float timeScale //This is where the magic happens
+    {
+        get { return _timeScale; }
+        set
         {
-            useDifferential = false;
+            if (!first)
+            {
+                rb.mass *= timeScale;
+                rb.velocity /= timeScale;
+                rb.angularVelocity /= timeScale;
+                /*Debug.Log(scaledDeltaTime.ownTimeScale);
+                Debug.Log(rb.mass);
+                Debug.Log(rb.velocity);
+                Debug.Log(rb.angularVelocity);*/
+            }
+            first = false;
+
+            _timeScale = Mathf.Abs(value);
+          
+            rb.mass /= timeScale;
+            rb.velocity *= timeScale;
+            rb.angularVelocity *= timeScale;
+            
         }
-        else
-        {
-            useDifferential = true;
-        }*/
+    }
+
+    void Awake()
+    {
         
+        rb = gameObject.GetComponent<Rigidbody>();
+        objectTimeline = gameObject.GetComponent<ObjectTimeLine>();
+        timeScale = _timeScale;
+    }
 
-        velocityMagnitude = Vector3.Magnitude(rb.velocity);
-        velocity = rb.velocity;
-        angularMagnitude = Vector3.Magnitude(rb.angularVelocity);
-        angVelocity = rb.angularVelocity;
 
-        if (ownTimescale == 1)
-        {//If Normal time
+    void Update()
+    {
+        direction = Mathf.Sign(objectTimeline.actualTarget - objectTimeline.previousTarget);
+
+        //Different TimeScale values: Normal, Slow and Fast, Pause.
+
+        if (objectTimeline.ownTimeScale == 1)
+        {//             Normal
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
+        else if ((objectTimeline.ownTimeScale > 0 && objectTimeline.ownTimeScale < 1) || objectTimeline.ownTimeScale > 1)
+        {//                                       Slow                                                Fast         
+            rb.useGravity = false;
             rb.isKinematic = false;
 
-            previousMass = rb.mass;
+            if (objectTimeline.ownTimeScale > 0.08)      //This is to avoid crazy velocity spikes when the time differential is near-infinite (when going back from 0 to normal time, the divisor is smaller than the dividend, 
+                timeScale = objectTimeline.ownTimeScale; //and being both smaller than 1, this causes extremely high numbers when very close to 0. 
+                                                          //Testing has concluded that the minimum value that timeScale should be is 0.08).
+
+        }
+        else if (objectTimeline.ownTimeScale == 0)
+        {//                   Pause
+            rb.isKinematic = true;
+            applied = false;
+        }
+
+        //Store rigidbody's velocity, angVelocity and mass before making it kinematic...
+        if(direction < 0 && objectTimeline.actualTarget == 0 && objectTimeline.ownTimeScale > 0)
+        {
             previousVelocity = rb.velocity;
             previousAngVelocity = rb.angularVelocity;
-            previousDrag = rb.drag;
-            previousAngDrag = rb.angularDrag;
-           
+            previousMass = rb.mass;
         }
-        else if (ownTimescale == 0 && scaledDeltaTime.actualTarget == 0)
-        {//if PAUSED
-            //Debug.Log("Co que cojones");
-            rb.isKinematic = true;
-            reapplyForces = true;
-        }
-        else if ((ownTimescale > 0 && ownTimescale < 1) && (scaledDeltaTime.actualTarget == 0.2f || scaledDeltaTime.actualTarget == 0))
-        {//if going to PAUSE or going to SLOW
-            rb.isKinematic = false;
-
-            if(useDifferential)
+        else if(direction > 0 && objectTimeline.previousTarget == 0)
+        {//... and reapply them ONCE after no longer being paused.
+            if(!applied)
             {
-                rb.mass /= timeScaleDifferential;
-                rb.velocity *= timeScaleDifferential;
-                rb.angularVelocity *= timeScaleDifferential;
-                //rb.drag /= timeScaleDifferential;
-                //rb.angularDrag /= timeScaleDifferential;
-            }
-            else
-            {
-                rb.mass = previousMass / ownTimescale;
-                rb.velocity = previousVelocity * ownTimescale;
-                rb.velocity += Physics.gravity * ownTimescale;
-                rb.angularVelocity = previousAngVelocity * ownTimescale;
-                //rb.drag = previousDrag / ownTimescale;
-                //rb.angularDrag = previousAngDrag / ownTimescale;
-            }    
-        }
-        else if(ownTimescale > 1)
-        {//if ACCELERATING
-            if (useDifferential)
-            {
-                rb.mass /= timeScaleDifferential;
-                rb.velocity *= timeScaleDifferential;
-                rb.angularVelocity *= timeScaleDifferential;
-                
-            }
-            else
-            {
-                rb.mass = previousMass / ownTimescale;
-                rb.velocity = previousVelocity * ownTimescale;
-                rb.angularVelocity = previousAngVelocity * ownTimescale;
-            }
-        }
-        
-        if(scaledDeltaTime.previousTarget == 0 && scaledDeltaTime.actualTarget > 0)
-        {//if just unpaused
-            if (reapplyForces)
-            {
-                rb.mass = previousMass;
                 rb.velocity = previousVelocity;
                 rb.angularVelocity = previousAngVelocity;
-                reapplyForces = false;
+                rb.mass = previousMass;
+                applied = true;
             }
+            
         }
-        
+    }
 
-        previousTimeScale = ownTimescale;//this stores the previous ownTimeScale value for the next frame.
-        previousTimeScale = Mathf.Clamp(previousTimeScale, Mathf.Epsilon, 50);
+    void FixedUpdate()
+    {
+        float dt = Time.fixedDeltaTime * timeScale;
+       
+        rb.velocity += Physics.gravity/ rb.mass * dt;
     }
 }

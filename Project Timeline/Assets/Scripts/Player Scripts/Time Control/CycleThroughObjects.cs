@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CycleThroughObjects : MonoBehaviour {
+public class CycleThroughObjects : TimeManagerScript {
 
     public int timeLayer = 9;
     public List<GameObject> objectsInTimeLayer;
-    private TimeScaleControl timeScaleControl;
+    
     public int iterated = 0;
 	// Use this for initialization
 	void Awake () {
@@ -36,12 +36,12 @@ public class CycleThroughObjects : MonoBehaviour {
 
         foreach(GameObject go in objectsInTimeLayer)
         {
-            if (go.GetComponent<ScaledDeltaTime>() != null)
+            if (go.GetComponent<ObjectTimeLine>() != null)
             {
-                go.GetComponent<ScaledDeltaTime>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
-                go.GetComponent<ScaledDeltaTime>().ownTimeScale = timeScaleControl.ownTimeScale;
-                go.GetComponent<ScaledDeltaTime>().actualTarget = timeScaleControl.targetValue;
-                go.GetComponent<ScaledDeltaTime>().previousTarget = timeScaleControl.previousTargetValue;
+                go.GetComponent<ObjectTimeLine>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
+                go.GetComponent<ObjectTimeLine>().ownTimeScale = timeScaleControl.ownTimeScale;
+                go.GetComponent<ObjectTimeLine>().actualTarget = timeScaleControl.targetValue;
+                go.GetComponent<ObjectTimeLine>().previousTarget = timeScaleControl.previousTargetValue;
             }
 
 

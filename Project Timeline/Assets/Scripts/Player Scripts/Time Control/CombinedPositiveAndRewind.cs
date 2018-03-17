@@ -10,7 +10,7 @@ public class CombinedPositiveAndRewind : MonoBehaviour {
 
     public bool useDifferential;
     private Rigidbody rb;
-    private ScaledDeltaTime scaledDeltaTime;
+    private ObjectTimeLine scaledDeltaTime;
 
     private Vector3 previousVelocity;
     private Vector3 previousAngVelocity;
@@ -40,7 +40,7 @@ public class CombinedPositiveAndRewind : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody>();
-        scaledDeltaTime = gameObject.GetComponent<ScaledDeltaTime>();
+        scaledDeltaTime = gameObject.GetComponent<ObjectTimeLine>();
         pointsInTime = new List<PointInTime>();
     }
 

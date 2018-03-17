@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AxisRotation : MonoBehaviour {
     float dt;
-    private ScaledDeltaTime scaledDeltaTime;
+    private ObjectTimeLine scaledDeltaTime;
 
     public bool sameRotationOnAllAxis = false;
     public float rotationForAllAxis = 5.0f;
@@ -19,7 +19,7 @@ public class AxisRotation : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        scaledDeltaTime = gameObject.GetComponent<ScaledDeltaTime>();
+        scaledDeltaTime = gameObject.GetComponent<ObjectTimeLine>();
 	}
 	
 	// Update is called once per frame
@@ -41,11 +41,11 @@ public class AxisRotation : MonoBehaviour {
 
         if (sameRotationOnAllAxis)
         {
-            transform.Rotate(rotX * Mathf.Rad2Deg * rotationForAllAxis * dt, rotY * Mathf.Rad2Deg * rotationForAllAxis * dt, rotZ * Mathf.Rad2Deg * rotationForAllAxis * dt);
+            transform.Rotate(rotX * Mathf.Rad2Deg * rotationForAllAxis * dt, rotY * Mathf.Rad2Deg * rotationForAllAxis * dt, rotZ * Mathf.Rad2Deg * rotationForAllAxis * dt, Space.Self);
         }
         else
         {
-            transform.Rotate(rotX * Mathf.Rad2Deg * rotationSpeedX * dt, rotY * Mathf.Rad2Deg * rotationSpeedY * dt, rotZ * Mathf.Rad2Deg * rotationSpeedZ * dt);
+            transform.Rotate(rotX * Mathf.Rad2Deg * rotationSpeedX * dt, rotY * Mathf.Rad2Deg * rotationSpeedY * dt, rotZ * Mathf.Rad2Deg * rotationSpeedZ * dt, Space.Self);
         }
         
 

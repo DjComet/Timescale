@@ -25,7 +25,7 @@ public struct PointInTime
 public class RewindScript : MonoBehaviour {
 
     private Rigidbody rb;
-    private ScaledDeltaTime scaledDeltaTime;
+    private ObjectTimeLine scaledDeltaTime;
     public float recordInterval = 0.01f;
     private List<PointInTime> pointsInTime;
     public float elapsedTime;
@@ -38,7 +38,7 @@ public class RewindScript : MonoBehaviour {
     void Start () {
         pointsInTime = new List<PointInTime>();
         rb = gameObject.GetComponent<Rigidbody>();
-        scaledDeltaTime = gameObject.GetComponent<ScaledDeltaTime>();
+        scaledDeltaTime = gameObject.GetComponent<ObjectTimeLine>();
         
 	}
 

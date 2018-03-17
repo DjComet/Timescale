@@ -6,7 +6,7 @@ public class CameraMovement : MonoBehaviour {
 
     float dt;
         
-    public GameObject player;
+    private GameObject player;
     private Inputs inputs;
     private Values values;
        
@@ -22,12 +22,13 @@ public class CameraMovement : MonoBehaviour {
     
     public float minimumX = -360F;
     public float maximumX = 360F;
-    public float minimumY = -60F;
-    public float maximumY = 60F;
+    public float minimumY = -90F;
+    public float maximumY = 90F;
 
     // Use this for initialization
     void Start () {
 
+        player = GameObject.FindGameObjectWithTag("Player");
         values = player.GetComponent<Values>();
         inputs = player.GetComponent<Inputs>();
 

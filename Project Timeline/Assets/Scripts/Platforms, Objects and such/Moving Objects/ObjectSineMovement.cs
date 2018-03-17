@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectSimpleMovement : MonoBehaviour {
+public class ObjectSineMovement : MonoBehaviour {
     float dt;
 
     //Linear movement, sine movement, axis of movement
     private TimeScaleControl timeScale;
-    private ScaledDeltaTime scaledDeltaTime;
-    
+    private ObjectTimeLine scaledDeltaTime;
+
+    public bool worldSpace;
+
     public float sineFrequency = 1f;
     public float sineMagnitude = 10f;
     public bool inverted = false;
@@ -23,7 +25,7 @@ public class ObjectSimpleMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        scaledDeltaTime = gameObject.GetComponent<ScaledDeltaTime>();
+        scaledDeltaTime = gameObject.GetComponent<ObjectTimeLine>();
         position = transform.position;
         
         realtime = sineMagnitude / 2;
@@ -44,7 +46,15 @@ public class ObjectSimpleMovement : MonoBehaviour {
         else
             dt = Time.deltaTime;
 
-        axis = transform.right * right + transform.up * up + transform.forward * forward;
+        if(worldSpace)
+        {
+            axis = Vector3.right * right + Vector3.up * up + Vector3.forward * forward;
+        }
+        else
+        {
+            axis = transform.right * right + transform.up * up + transform.forward * forward;
+        }
+        
         sine();
 	}
     void sine()
