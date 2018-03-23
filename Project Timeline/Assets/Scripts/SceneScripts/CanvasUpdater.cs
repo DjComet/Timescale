@@ -31,9 +31,12 @@ public class CanvasUpdater : MonoBehaviour {
             else if (child.name == "EnergySlider")
             {
                 energySlider = child.GetComponent<Slider>();
-                energySlider.maxValue = timeScaleControl.energy.maxEnergyAmt;
+                if (timeScaleControl != null && timeScaleControl.energy != null)
+                {
+                    energySlider.maxValue = timeScaleControl.energy.maxEnergyAmt;
 
-                energyAmount = timeScaleControl.energy.maxEnergyAmt;
+                    energyAmount = timeScaleControl.energy.maxEnergyAmt;
+                }
             }
             else if (child.name == "MouseClickHint")
             {
@@ -44,6 +47,7 @@ public class CanvasUpdater : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if(timeScaleControl != null && timeScaleControl.energy != null)
         changeUI();
 	}
 

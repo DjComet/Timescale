@@ -6,10 +6,13 @@ public class FindOtherPortal : MonoBehaviour {
 
     public bool portales = false;
 
-    public GameObject otherP;
+    
+    public GameObject PortalPref;
 
-	// Use this for initialization
-	void Start () {
+    private GameObject otherP;
+
+    // Use this for initialization
+    void Start () {
         if(this.tag == "PortalA")
         {
             GameObject roomChange = GameObject.FindGameObjectWithTag("OriginalRoomChange");
@@ -28,12 +31,12 @@ public class FindOtherPortal : MonoBehaviour {
             portales = true;
             if (this.tag == "PortalB")
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z+120);
-
                 otherP = GameObject.FindGameObjectWithTag("PortalA");
             }
             if (this.tag == "PortalA")
             {
+                GameObject.Instantiate(PortalPref, transform.position, transform.rotation);
+                transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + 120);
                 otherP = GameObject.FindGameObjectWithTag("PortalB");
             }
             this.GetComponent<StepThroughPortal>().otherPortal = otherP.transform;

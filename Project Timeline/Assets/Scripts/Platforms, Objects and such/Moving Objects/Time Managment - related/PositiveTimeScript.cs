@@ -62,6 +62,7 @@ public class PositiveTimeScript : MonoBehaviour {
         {//             Normal
             rb.isKinematic = false;
             rb.useGravity = true;
+            timeScale = 1;
         }
         else if ((objectTimeline.ownTimeScale > 0 && objectTimeline.ownTimeScale < 1) || objectTimeline.ownTimeScale > 1)
         {//                                       Slow                                                Fast         

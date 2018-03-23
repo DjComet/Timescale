@@ -23,7 +23,7 @@ using System.Collections;
 //namespace BLINDED_AM_ME
 //{
 
-    //[ExecuteInEditMode]
+    [ExecuteInEditMode]
     public class PortalView : MonoBehaviour
     {
 

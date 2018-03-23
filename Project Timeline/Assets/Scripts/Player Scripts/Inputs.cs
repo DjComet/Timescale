@@ -21,6 +21,11 @@ public class Inputs : MonoBehaviour {
     public float mouseScroll;
     public float timeScaleAxis;
 
+    public bool weap1;
+    public bool weap2;
+    public bool weap3;
+    public bool weap4;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -49,8 +54,11 @@ public class Inputs : MonoBehaviour {
         mouseY = Input.GetAxisRaw("MouseY");
         mouseScroll = Input.GetAxisRaw("MouseScrollWheel");
 
+        weap1 = Input.GetButtonDown("Weapon1");
+        weap2 = Input.GetButtonDown("Weapon2");
+        weap3 = Input.GetButtonDown("Weapon3");
+        weap4 = Input.GetButtonDown("Weapon4");
 
-        
 
     }
 }
