@@ -55,8 +55,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1849524431694124}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0045623006, z: 0.55}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -4.524722, y: 21.86, z: -20.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4140741059353434}
@@ -69,8 +69,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1709380064632430}
-  m_LocalRotation: {x: -0.074177705, y: 0.16730654, z: -0.012625309, w: -0.9830294}
-  m_LocalPosition: {x: 45.722736, y: -39.1055, z: -38.989254}
+  m_LocalRotation: {x: -0.111202195, y: 0.6979065, z: -0.11107196, w: -0.6987301}
+  m_LocalPosition: {x: 44.978188, y: -16.845438, z: 15.695278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4065247644278830}
@@ -107,6 +107,7 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -162,7 +163,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 6, z: 0}
+  m_Size: {x: 1.5, y: 3, z: 0}
   m_Center: {x: 0, y: 0, z: 0.3}
 --- !u!114 &114147430520090804
 MonoBehaviour:
@@ -191,8 +192,8 @@ MonoBehaviour:
   pointB: {fileID: 0}
   scoutCamera: {fileID: 20273014371283862}
   faceNormal: {x: 0, y: 0, z: 1}
-  displacement: {x: 54.464523, y: 19.765495, z: 15.297463}
-  normalizedDisplacement: {x: 0.90886986, y: 0, z: 0.25527447}
+  displacement: {x: -0.22000122, y: -2.5245624, z: 8.408182}
+  normalizedDisplacement: {x: -0.02505206, y: 0, z: 0.95745957}
   IsPortalForward: 1
   m_TextureSize: 1080
   m_ClipPlaneOffset: 0.01

@@ -286,11 +286,11 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>Library\UnityAssemblies\UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
-    <Reference Include="ProBuilderEditor-Unity5">
-      <HintPath>Assets\Packs\ProCore\ProBuilder\Editor\ProBuilderEditor-Unity5.dll</HintPath>
+    <Reference Include="ProBuilderCore-Unity5">
+      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ProBuilderCore-Unity5.dll</HintPath>
     </Reference>
-    <Reference Include="Poly2Tri">
-      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ClassesLib\Poly2Tri.dll</HintPath>
+    <Reference Include="ProBuilderMeshOps-Unity5">
+      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ProBuilderMeshOps-Unity5.dll</HintPath>
     </Reference>
     <Reference Include="KdTreeLib">
       <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ClassesLib\KdTreeLib.dll</HintPath>
@@ -298,11 +298,11 @@
     <Reference Include="pb_Stl">
       <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ClassesLib\pb_Stl.dll</HintPath>
     </Reference>
-    <Reference Include="ProBuilderCore-Unity5">
-      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ProBuilderCore-Unity5.dll</HintPath>
+    <Reference Include="Poly2Tri">
+      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ClassesLib\Poly2Tri.dll</HintPath>
     </Reference>
-    <Reference Include="ProBuilderMeshOps-Unity5">
-      <HintPath>Assets\Packs\ProCore\ProBuilder\Classes\ProBuilderMeshOps-Unity5.dll</HintPath>
+    <Reference Include="ProBuilderEditor-Unity5">
+      <HintPath>Assets\Packs\ProCore\ProBuilder\Editor\ProBuilderEditor-Unity5.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

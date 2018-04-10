@@ -34,7 +34,7 @@ public class CameraEffectsController : MonoBehaviour {
         colorValues[2] = new Color(1.0f, 1.0f, 0.0f, 1.0f);
         colorValues[3] = new Color(1.0f, 0.4f, 0.0f, 1.0f);
         ppp = GetComponent<PostProcessingBehaviour>().profile;
-        ptScrip = GetComponentInParent<TimeScaleControl>();
+        ptScrip = GameObject.FindGameObjectWithTag("Player").GetComponent<TimeScaleControl>();
 
         playerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");       
         for (int i = 0; i < playerCanvas.transform.childCount; i++)

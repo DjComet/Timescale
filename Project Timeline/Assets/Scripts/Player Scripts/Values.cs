@@ -22,6 +22,7 @@ public class Values : MonoBehaviour {
     public float gravity = 40.0f;
     public float coyoteTime = 0.2f;      //Time elapsed after you are no longer on a structure, but can still jump.
     public float deltaGround = 2.2f;     //half of the capsule's height + a lil bit extra for good measure.
+    public float radiusDeltaGround = 0.25f;
     public float maxFallSpeed = 80.0f;
     
     public bool grounded = false;
@@ -34,15 +35,18 @@ public class Values : MonoBehaviour {
     public float camVerticalSpeed = 70.0f;
 
 
-    private Vector3 front = new Vector3(0.0f, 0.0f, 0.5f);
-    private Vector3 back = new Vector3(0.0f, 0.0f, -0.5f);
-    private Vector3 left = new Vector3(-0.5f, 0.0f, 0.0f);
-    private Vector3 right = new Vector3(0.5f, 0.0f, 0.0f);
+    private Vector3 front;
+    private Vector3 back;
+    private Vector3 left;
+    private Vector3 right;
 
     // Use this for initialization
     void Start () {
-		
-	}
+        front = new Vector3(0.0f, 0.0f, radiusDeltaGround);
+        back = new Vector3(0.0f, 0.0f, -radiusDeltaGround);
+        left = new Vector3(-radiusDeltaGround, 0.0f, 0.0f);
+        right = new Vector3(radiusDeltaGround, 0.0f, 0.0f);
+}
 	
 	// Update is called once per frame
 	void Update () {

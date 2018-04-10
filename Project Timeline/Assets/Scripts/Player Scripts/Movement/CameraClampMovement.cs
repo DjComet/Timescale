@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class CameraClampMovement : MonoBehaviour
 {
+    private GameObject player;
+    private Inputs inputs;
+    public float distanceFromCenterOfPlayer = 0.81f;
+
     public float sensitivityX = 15.0f;
     public float sensitivityY = 15.0f;
 
@@ -16,23 +20,29 @@ public class CameraClampMovement : MonoBehaviour
     private float xAngle = 0.0f;
     private float yAngle = 0.0f;
 
+   
     Quaternion originalRotation;
-    
+    Quaternion playerOriginalRotation;
+
+
     void Start()
     {
         Rigidbody rb = GetComponent<Rigidbody>();
+        player = GameObject.FindGameObjectWithTag("Player");
         if (rb)
         {
             rb.freezeRotation = true;
         }
         originalRotation = transform.localRotation;
-
+        playerOriginalRotation = player.transform.localRotation;
+        
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    void Update()
+    void LateUpdate()
     {
+        transform.localPosition = player.transform.localPosition + player.transform.up * distanceFromCenterOfPlayer;
         //Gets rotational input from the mouse
         xAngle += Input.GetAxis("MouseX") * sensitivityX;
         yAngle += Input.GetAxis("MouseY") * sensitivityY;
@@ -42,11 +52,12 @@ public class CameraClampMovement : MonoBehaviour
         yAngle = ClampAngle(yAngle, minimumY, maximumY);
 
         //Create rotations around axis
-        Quaternion yQuaternion = Quaternion.AngleAxis(yAngle, Vector3.left);
-        Quaternion xQuaternion = Quaternion.AngleAxis(xAngle, Vector3.up);
+        Quaternion leftQuaternion = Quaternion.AngleAxis(yAngle, Vector3.left);
+        Quaternion upQuaternion = Quaternion.AngleAxis(xAngle, Vector3.up);
 
         //Rotate
-        transform.localRotation = originalRotation * xQuaternion * yQuaternion;
+        transform.localRotation = originalRotation * upQuaternion * leftQuaternion;
+        player.transform.forward = new Vector3(transform.forward.x, 0, transform.forward.z);
     }
 
     public static float ClampAngle(float angle, float min, float max)
