@@ -15,6 +15,7 @@ TagManager:
   - CopyRoom
   - OriginalRoomChange
   - CopyRoomChange
+  - CanCreatePortal
   layers:
   - Default
   - TransparentFX

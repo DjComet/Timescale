@@ -8,7 +8,7 @@ public class TimeManagerScript : MonoBehaviour {
     protected GameObject player;
     protected TimeScaleControl timeScaleControl;
 
-    public float elapsedTime;
+    public float currentTime;
     public float ownTimeScale;
 
 

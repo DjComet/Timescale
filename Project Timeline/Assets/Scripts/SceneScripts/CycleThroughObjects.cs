@@ -42,24 +42,7 @@ public class CycleThroughObjects : TimeManagerScript {
                 go.GetComponent<ObjectTimeLine>().ownTimeScale = timeScaleControl.ownTimeScale;
                 go.GetComponent<ObjectTimeLine>().actualTarget = timeScaleControl.targetValue;
                 go.GetComponent<ObjectTimeLine>().previousTarget = timeScaleControl.previousTargetValue;
-            }
-
-
-            if (go.GetComponent<RewindScript>() != null)
-            {
-                if (timeScaleControl.rewindHasBeenPressed)
-                {
-                    go.GetComponent<RewindScript>().isRewinding = true;
-                }
-                else 
-                {
-                    go.GetComponent<RewindScript>().isRewinding = false;
-                }
-            }
-
-
-            
+            }           
         }
-
 	}
 }

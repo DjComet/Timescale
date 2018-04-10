@@ -7,7 +7,7 @@ public class ObjectSineMovement : MonoBehaviour {
 
     //Linear movement, sine movement, axis of movement
     private TimeScaleControl timeScale;
-    private ObjectTimeLine scaledDeltaTime;
+    private ObjectTimeLine objectTimeLine;
 
     public bool worldSpace;
 
@@ -25,7 +25,7 @@ public class ObjectSineMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        scaledDeltaTime = gameObject.GetComponent<ObjectTimeLine>();
+        objectTimeLine = gameObject.GetComponent<ObjectTimeLine>();
         position = transform.position;
         
         realtime = sineMagnitude / 2;
@@ -41,8 +41,8 @@ public class ObjectSineMovement : MonoBehaviour {
         up = (isUp ? 1 : 0);
         forward = (isForward ? 1 : 0);
 
-        if (scaledDeltaTime != null)
-            dt = scaledDeltaTime.scaledDT;
+        if (objectTimeLine != null)
+            dt = objectTimeLine.scaledDT;
         else
             dt = Time.deltaTime;
 

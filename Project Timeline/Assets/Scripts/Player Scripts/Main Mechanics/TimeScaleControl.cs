@@ -41,7 +41,7 @@ public class TimeScaleControl : MonoBehaviour {
     public bool slowHasBeenPressed = false;
     public bool pauseHasBeenPressed = false;
     public bool rewindHasBeenPressed = false;
-    bool notSet = true;
+    public bool notSet = true;
 
     // Use this for initialization
     void Start () {
@@ -177,7 +177,7 @@ public class TimeScaleControl : MonoBehaviour {
        switch(i)
        {
            case 0:
-               energy.energyAmount -= energy.rewindReductionAmt * dt;
+                energy.energyAmount += energy.rewindReductionAmt * dt * ownTimeScale;
                break;
            case 1:
                energy.energyAmount -= energy.pauseReductionAmt * dt;
@@ -200,6 +200,7 @@ public class TimeScaleControl : MonoBehaviour {
         if(energy.energyAmount <= energy.minEnergyAmt)
         {
             i = 3;
+            previousTargetValue = targetValue;
         }
     }
     

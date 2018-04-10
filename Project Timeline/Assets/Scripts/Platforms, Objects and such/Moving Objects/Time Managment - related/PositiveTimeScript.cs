@@ -55,6 +55,9 @@ public class PositiveTimeScript : MonoBehaviour {
     void Update()
     {
         direction = Mathf.Sign(objectTimeline.actualTarget - objectTimeline.previousTarget);
+        //timeScale = Mathf.Clamp(timeScale, 0.08f, 5);
+
+
 
         //Different TimeScale values: Normal, Slow and Fast, Pause.
 
@@ -64,23 +67,28 @@ public class PositiveTimeScript : MonoBehaviour {
             rb.useGravity = true;
             timeScale = 1;
         }
-        else if ((objectTimeline.ownTimeScale > 0 && objectTimeline.ownTimeScale < 1) || objectTimeline.ownTimeScale > 1)
+        else if (((objectTimeline.ownTimeScale > 0 && objectTimeline.ownTimeScale < 1) || objectTimeline.ownTimeScale > 1) && objectTimeline.previousTarget != -1)
         {//                                       Slow                                                Fast         
             rb.useGravity = false;
             rb.isKinematic = false;
 
             if (objectTimeline.ownTimeScale > 0.08)      //This is to avoid crazy velocity spikes when the time differential is near-infinite (when going back from 0 to normal time, the divisor is smaller than the dividend, 
                 timeScale = objectTimeline.ownTimeScale; //and being both smaller than 1, this causes extremely high numbers when very close to 0. 
-                                                          //Testing has concluded that the minimum value that timeScale should be is 0.08).
-
+                                                         //Testing has concluded that the minimum value that timeScale should be is 0.08).
+            Debug.Log("Slow Pause Accel");
         }
         else if (objectTimeline.ownTimeScale == 0)
         {//                   Pause
             rb.isKinematic = true;
             applied = false;
         }
+        else if(objectTimeline.previousTarget == -1)
+        {
+             
+        }
+        
 
-        //Store rigidbody's velocity, angVelocity and mass before making it kinematic...
+        //Store rigidbody's velocity, angVelocity and mass before making it kinematic on pause...
         if(direction < 0 && objectTimeline.actualTarget == 0 && objectTimeline.ownTimeScale > 0)
         {
             previousVelocity = rb.velocity;
@@ -88,7 +96,7 @@ public class PositiveTimeScript : MonoBehaviour {
             previousMass = rb.mass;
         }
         else if(direction > 0 && objectTimeline.previousTarget == 0)
-        {//... and reapply them ONCE after no longer being paused.
+        {//... and reapply them ONCE after no longer being paused or rewinded.
             if(!applied)
             {
                 rb.velocity = previousVelocity;
@@ -98,6 +106,8 @@ public class PositiveTimeScript : MonoBehaviour {
             }
             
         }
+
+        
     }
 
     void FixedUpdate()
