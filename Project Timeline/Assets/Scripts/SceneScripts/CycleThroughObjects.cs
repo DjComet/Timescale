@@ -38,10 +38,10 @@ public class CycleThroughObjects : TimeManagerScript {
         {
             if (go.GetComponent<ObjectTimeLine>() != null)
             {
-                go.GetComponent<ObjectTimeLine>().scaledDT = Time.deltaTime * timeScaleControl.ownTimeScale;
-                go.GetComponent<ObjectTimeLine>().ownTimeScale = timeScaleControl.ownTimeScale;
-                go.GetComponent<ObjectTimeLine>().actualTarget = timeScaleControl.targetValue;
-                go.GetComponent<ObjectTimeLine>().previousTarget = timeScaleControl.previousTargetValue;
+
+                go.GetComponent<ObjectTimeLine>().timeManagerScript = gameObject.GetComponent<TimeManagerScript>();
+
+                
             }           
         }
 	}

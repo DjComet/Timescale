@@ -24,19 +24,23 @@ public class TimeScaleControl : MonoBehaviour {
     private Inputs inputs;
     public EnergyMeter energy;
 
+    //************************************ TIME TARGETS, ARRAY AND CONTROL ***************************************************************************************************
     public float[] timeValues;
     public float targetValue;
     public float ownTimeScale = 1.0f;
-    private float maxTimeMultiplierValue = 2.0f;
-    private float minTimeMultiplierValue = -1.0f;
+    private float maxTimeMultiplierValue = 2.0f;//this should be equals to the value in the biggest position on the timeValues array (i = 4)
+    private float minTimeMultiplierValue = -1.0f;//same as above but with i = 0;
     public float previousTargetValue;
     
     public int i = 3; //3 is the position of the value 1, which implies normal time flow (ownTimeScale is multiplied by 1).
 
+    //************************************ TIME SELECTOR SLIDER **************************************************************************************************************
     public float maxSlidingSpeed = 1f;
     public float slidingAcceleration = 2.5f;
     public float slidingSpeed = 0.0f;
 
+
+    //************************************ TIME TARGET BOOLEANS **************************************************************************************************************
     public bool accelHasBeenPressed = false;
     public bool slowHasBeenPressed = false;
     public bool pauseHasBeenPressed = false;
@@ -144,7 +148,7 @@ public class TimeScaleControl : MonoBehaviour {
             maxSlidingSpeed *= -1;
 
 
-        if(targetValue >=0 && previousTargetValue == -1 && notSet)
+        if(targetValue >=0 && previousTargetValue == -1 && notSet) //Everytime we go from rewind to anything else ownTimeScale is automatically set to 0, skipping negative numbers (accelerating from -1 to 0)
         {
             ownTimeScale = 0;
             notSet = false;

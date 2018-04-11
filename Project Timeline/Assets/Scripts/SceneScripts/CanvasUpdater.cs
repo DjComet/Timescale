@@ -9,8 +9,10 @@ public class CanvasUpdater : MonoBehaviour {
     private Text timeMultIndicator;
     private Text mouseClickHint;
     private Slider energySlider;
+    private Text currentTime;
     private GameObject player;
     private TimeScaleControl timeScaleControl;
+    private TimeManagerScript timeManagerScript;
 
     private float energyAmount;
 
@@ -20,6 +22,7 @@ public class CanvasUpdater : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         inputs = player.GetComponent<Inputs>();
         timeScaleControl = player.GetComponent<TimeScaleControl>();
+        timeManagerScript = gameObject.GetComponent<TimeManagerScript>();
 
         for (int i = 0; i < playerCanvas.transform.childCount; i++)
         {
@@ -42,6 +45,10 @@ public class CanvasUpdater : MonoBehaviour {
             {
                 mouseClickHint = child.GetComponent<Text>();
             }
+            else if (child.name == "CurrentTime")
+            {
+                currentTime = child.GetComponent<Text>();
+            }
         }
     }
 	
@@ -49,6 +56,7 @@ public class CanvasUpdater : MonoBehaviour {
 	void Update () {
         if(timeScaleControl != null && timeScaleControl.energy != null)
         changeUI();
+        currentTime.text = timeManagerScript.currentTime.ToString("#.00");
 	}
 
     void changeUI()

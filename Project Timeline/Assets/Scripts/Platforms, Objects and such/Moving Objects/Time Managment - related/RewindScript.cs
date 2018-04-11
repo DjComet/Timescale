@@ -9,17 +9,18 @@ public struct PointInTime
     public readonly Quaternion rotation;
     public readonly Vector3 velocity;
     public readonly Vector3 angularVelocity;
-    public readonly float recordingTime;
-    
+    public readonly float timeWhenRecorded;
+    public readonly int number;
     
 
-    public PointInTime(Transform t, Vector3 v, Vector3 angV, float cT)
+    public PointInTime(Transform t, Vector3 v, Vector3 angV, float cT, int n)
     {
         position = t.position;
         rotation = t.rotation;
         velocity = v;
         angularVelocity = angV;
-        recordingTime = cT;
+        timeWhenRecorded = cT;
+        number = n;
     }
 }
 
@@ -39,6 +40,8 @@ public class RewindScript : MonoBehaviour {
     public float t = 0;
     public bool canInitializeLerp = true;
 
+    int number = 0;
+
     Vector3 initialPos;
     Quaternion initialRot;
     float initialTime;
@@ -50,13 +53,13 @@ public class RewindScript : MonoBehaviour {
         rb = gameObject.GetComponent<Rigidbody>();
         objectTimeline = gameObject.GetComponent<ObjectTimeLine>();
         positiveTimeScript = gameObject.GetComponent<PositiveTimeScript>();
-        
-	}
+        pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime, number));
+    }
 
     // Update is called once per frame
     void Update()
     {
-        currentTime += objectTimeline.scaledDT;
+        currentTime = objectTimeline.timeManagerScript.currentTime;
 
         if (objectTimeline.ownTimeScale < 0)
             isRewinding = true;
@@ -66,12 +69,13 @@ public class RewindScript : MonoBehaviour {
         }
 
 
+
         if (isRewinding)
         {
             rb.isKinematic = true;
             Rewind();
             hasAppliedStop = false;
-            //positiveTimeScript.enabled = false;
+            
         }
         else if(!isRewinding)
         {
@@ -81,7 +85,7 @@ public class RewindScript : MonoBehaviour {
                 hasAppliedStop = true;
             }
             Record();
-            //positiveTimeScript.enabled = true;
+            
         }
 
     }
@@ -94,12 +98,13 @@ public class RewindScript : MonoBehaviour {
         counter += Mathf.Abs(objectTimeline.scaledDT);//Abs is a safeguard against negative scaledDeltaTimes when coming back from rewind to normal time
         if (counter >= recordInterval)
         {
-            if (pointsInTime.Count > Mathf.Round(recordTime / Time.deltaTime))
+            /*if (pointsInTime[pointsInTime.Count - 1].recordingTime - currentTime > 5.0f)//If the time elapsed between NOW and the last element on the list is greater than 5 seconds, delete it.
             {
                 pointsInTime.RemoveAt(pointsInTime.Count - 1);
-            }
-
-            pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime));
+            }*/
+            number += 1;
+            pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime, number));
+            Debug.Log("PointInTimeInserted: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
             counter = 0;
         }
         
@@ -117,25 +122,29 @@ public class RewindScript : MonoBehaviour {
             PointInTime pointInTime = pointsInTime[0];
             //transform.position = pointInTime.position;
             //transform.rotation = pointInTime.rotation;
-            if (currentTime != pointInTime.recordingTime && canInitializeLerp)
+            if (currentTime != pointInTime.timeWhenRecorded && canInitializeLerp)
             {
                 initialPos = transform.position;
                 initialRot = transform.rotation;
                 initialTime = currentTime;
                 canInitializeLerp = false;
+                t = 0;
             }
-            
-            //Extract the value from 0 to 1 in between the time at which the lerp commenced and the time at which it will end
-            t += (1 / Mathf.Abs(pointInTime.recordingTime - initialTime)) * (objectTimeline.scaledDT * -1);
-            t = Mathf.Clamp01(t);
 
+            //Extract the value from 0 to 1 in between the time at which the lerp commenced and the time at which it will end
+            Debug.Log("t+="+ (1 / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime)) * (objectTimeline.scaledDT * -1));
+            t += (1 / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime)) * (objectTimeline.scaledDT * -1);
+            t = Mathf.Clamp01(t);
+            Debug.Log("t =" + t);
             transform.position = Vector3.Lerp(initialPos, pointInTime.position, t);
             transform.rotation = Quaternion.Slerp(initialRot, pointInTime.rotation, t);
 
-            if (pointsInTime != null && currentTime <= pointInTime.recordingTime)
+            if (pointsInTime != null && currentTime <= pointInTime.timeWhenRecorded)
             {
                 t = 0;
+                Debug.Log("PointInTimeRemoved: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
                 pointsInTime.RemoveAt(0);
+                number -= 1;
                 canInitializeLerp = true;
             }
            
@@ -162,10 +171,13 @@ public class RewindScript : MonoBehaviour {
         t = 0;
         rb.isKinematic = false;
         ReapplyForces();
+        canInitializeLerp = true;
     }
 
     void ReapplyForces()
     {
+        Debug.Log("Applying Velocity:" + pointsInTime[0].velocity + "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        Debug.Log("Applying AngularVelocity:" + pointsInTime[0].angularVelocity);
         rb.position = pointsInTime[0].position;
         rb.rotation = pointsInTime[0].rotation;
         rb.velocity = pointsInTime[0].velocity;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectTimeLine : MonoBehaviour {
 
+    public TimeManagerScript timeManagerScript;
+
     public float actualTarget;
     public float previousTarget;
     public float ownTimeScale;
@@ -18,7 +20,10 @@ public class ObjectTimeLine : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        
+        actualTarget = timeManagerScript.timeScaleControl.targetValue;
+        previousTarget = timeManagerScript.timeScaleControl.previousTargetValue;
+        ownTimeScale = timeManagerScript.ownTimeScale;
+        scaledDT = timeManagerScript.ownTimeScale * Time.deltaTime;
 
 	}
 }

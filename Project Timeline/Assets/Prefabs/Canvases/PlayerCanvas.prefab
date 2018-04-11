@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 222579147855196936}
   - component: {fileID: 114332949271013278}
   m_Layer: 8
-  m_Name: ElapsedTime
+  m_Name: CurrentTime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
