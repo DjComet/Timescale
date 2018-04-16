@@ -42,7 +42,7 @@ public class CameraClampMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.localPosition = player.transform.localPosition + player.transform.up * distanceFromCenterOfPlayer;
+        transform.position = player.transform.position + player.transform.up * distanceFromCenterOfPlayer;
         //Gets rotational input from the mouse
         xAngle += Input.GetAxis("MouseX") * sensitivityX;
         yAngle += Input.GetAxis("MouseY") * sensitivityY;

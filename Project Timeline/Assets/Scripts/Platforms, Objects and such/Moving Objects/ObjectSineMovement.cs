@@ -8,7 +8,7 @@ public class ObjectSineMovement : MonoBehaviour {
     //Linear movement, sine movement, axis of movement
     private TimeScaleControl timeScale;
     private ObjectTimeLine objectTimeLine;
-
+    private MovingObjectSpeed movingObjectSpeed;
     public bool worldSpace;
 
     public float sineFrequency = 1f;
@@ -21,10 +21,18 @@ public class ObjectSineMovement : MonoBehaviour {
     public float delay = 0f;
     Vector3 axis;
     Vector3 position;
+    public float speedMagnitude = 0.0f;
+    public Vector3 speedVector = Vector3.zero;
 
 
     // Use this for initialization
     void Start () {
+        if (!gameObject.GetComponent<MovingObjectSpeed>())
+        {
+            gameObject.AddComponent<MovingObjectSpeed>();
+        }
+        movingObjectSpeed = gameObject.GetComponent<MovingObjectSpeed>();
+
         objectTimeLine = gameObject.GetComponent<ObjectTimeLine>();
         position = transform.position;
         
@@ -56,12 +64,17 @@ public class ObjectSineMovement : MonoBehaviour {
         }
         
         sine();
+
+        movingObjectSpeed.speedMagnitude = speedMagnitude ;
+        movingObjectSpeed.speedVector = speedVector ;
 	}
     void sine()
     {
         realtime += dt;
 
         transform.position = position + axis * Mathf.Sin(realtime* 2 * Mathf.PI * sineFrequency) * sineMagnitude;
+        speedMagnitude = 2 * Mathf.PI * sineFrequency * sineMagnitude * Mathf.Cos(2 * Mathf.PI * sineFrequency * realtime) * Mathf.Abs(objectTimeLine.ownTimeScale); //Derivada de la funcion seno. No queremos velocidades negativas al rebobinar así que cogemos el valo absoluto.
+        speedVector = axis * speedMagnitude;
     }
 }
 

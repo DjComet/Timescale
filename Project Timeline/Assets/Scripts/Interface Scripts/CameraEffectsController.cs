@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class CameraEffectsController : MonoBehaviour {
     
-    public float tValue;
+    public float targetValue;
     public float previousTValue;
 
-    private TimeScaleControl ptScrip;
+    private TimeScaleControl timeScaleControl;
     private PostProcessingProfile ppp;
     private GameObject playerCanvas;
     private Image fadingScreen;
@@ -22,9 +22,14 @@ public class CameraEffectsController : MonoBehaviour {
     public bool hasFaded = false;
     public bool canFade = false;
     public bool notSet = true;
-    
-    
-    
+    public bool hasRewinded = false;
+
+    float acceleratedTimeValue;
+    float normalTimeValue;
+    float slowedTimeValue;
+    float pausedTimeValue;
+    float rewindTimeValue;
+
 
     // Use this for initialization
     void Start () {
@@ -34,7 +39,7 @@ public class CameraEffectsController : MonoBehaviour {
         colorValues[2] = new Color(1.0f, 1.0f, 0.0f, 1.0f);
         colorValues[3] = new Color(1.0f, 0.4f, 0.0f, 1.0f);
         ppp = GetComponent<PostProcessingBehaviour>().profile;
-        ptScrip = GameObject.FindGameObjectWithTag("Player").GetComponent<TimeScaleControl>();
+        timeScaleControl = GameObject.FindGameObjectWithTag("Player").GetComponent<TimeScaleControl>();
 
         playerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");       
         for (int i = 0; i < playerCanvas.transform.childCount; i++)
@@ -52,25 +57,32 @@ public class CameraEffectsController : MonoBehaviour {
         resetProfile();
 
         color.a = 0.0f;
-        tValue = 1;
-        previousTValue = tValue;
+        targetValue = 1;
+        previousTValue = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
         float dt = Time.deltaTime;
-        tValue = ptScrip.targetValue;            
+        targetValue = timeScaleControl.targetValue;
+        targetValue = Mathf.Clamp(targetValue, -1, acceleratedTimeValue);
 
-       
 
-        if(tValue!= 1)
+        acceleratedTimeValue = timeScaleControl.timeValues[4];
+        normalTimeValue = timeScaleControl.timeValues[3];
+        slowedTimeValue = timeScaleControl.timeValues[2];
+        pausedTimeValue = timeScaleControl.timeValues[1];
+        rewindTimeValue = timeScaleControl.timeValues[0];
+
+
+        if (targetValue!= normalTimeValue)
         {
-            if (tValue != previousTValue)
+            if (targetValue != previousTValue)
             {
                 canFade = true;
                 resetProfile();
-                previousTValue = tValue;
                 
+
             }
             if(canFade)//Cada vez que se cambia de target value se reinicia el efecto de fadingScreen
             {
@@ -99,32 +111,32 @@ public class CameraEffectsController : MonoBehaviour {
             var fadingScreenColor = fadingScreen.color;
             fadingScreenColor.a = 0.0f;
             fadingScreen.color = fadingScreenColor;
-            previousTValue = tValue;
+            previousTValue = targetValue;
         }
     }
 
     //Set color with the player variable tValue
     void calculateColor()
-    {        
-        if (tValue == -1)
+    {
+        if (timeScaleControl.rewindHasBeenPressed)
         {
-            color = colorValues[1];
-            var gradSettings = ppp.colorGrading.settings;
-            gradSettings.channelMixer.red.x = Mathf.MoveTowards(ppp.colorGrading.settings.channelMixer.red.x, 2, colorApplySpeed * Time.deltaTime);
-            ppp.colorGrading.settings = gradSettings;
-            lastColor = "red";
-
-
+                color = colorValues[1];
+                var gradSettings = ppp.colorGrading.settings;
+                gradSettings.channelMixer.red.x = Mathf.MoveTowards(ppp.colorGrading.settings.channelMixer.red.x, 2, colorApplySpeed * Time.deltaTime);
+                ppp.colorGrading.settings = gradSettings;
+                lastColor = "red";
+                previousTValue = targetValue;
         }
-        else if (tValue == 0)
+        else if (timeScaleControl.pauseHasBeenPressed)
         {
             color = colorValues[0];            
             var gradSettings = ppp.colorGrading.settings;
             gradSettings.channelMixer.blue.z = Mathf.MoveTowards(ppp.colorGrading.settings.channelMixer.blue.z, 2, colorApplySpeed * Time.deltaTime);
             ppp.colorGrading.settings = gradSettings;
-            lastColor = "blue"; 
+            lastColor = "blue";
+            previousTValue = targetValue;
         }
-        else if (tValue == 0.2f)
+        else if (timeScaleControl.slowHasBeenPressed)
         {
             color = colorValues[2];
             var gradSettings = ppp.colorGrading.settings;
@@ -133,8 +145,9 @@ public class CameraEffectsController : MonoBehaviour {
             ppp.colorGrading.settings = gradSettings;
 
             lastColor = "yellow";
+            previousTValue = targetValue;
         }
-        else if (tValue == 2)
+        else if (timeScaleControl.accelHasBeenPressed)
         {
             color = colorValues[3];
             var gradSettings = ppp.colorGrading.settings;
@@ -142,7 +155,12 @@ public class CameraEffectsController : MonoBehaviour {
             gradSettings.channelMixer.green.y = Mathf.MoveTowards(ppp.colorGrading.settings.channelMixer.green.y, 1.4f, colorApplySpeed * Time.deltaTime);
             ppp.colorGrading.settings = gradSettings;
             lastColor = "orange";
+            previousTValue = targetValue;
         }
+        
+
+        
+
         var vignetteColor = ppp.vignette.settings;
         vignetteColor.color = color;
         ppp.vignette.settings = vignetteColor;

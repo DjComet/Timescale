@@ -23,6 +23,7 @@ public class TimeScaleControl : MonoBehaviour {
     float dt;
     private Inputs inputs;
     public EnergyMeter energy;
+    public bool enableDebug = false;
 
     //************************************ TIME TARGETS, ARRAY AND CONTROL ***************************************************************************************************
     public float[] timeValues;
@@ -31,7 +32,10 @@ public class TimeScaleControl : MonoBehaviour {
     private float maxTimeMultiplierValue = 2.0f;//this should be equals to the value in the biggest position on the timeValues array (i = 4)
     private float minTimeMultiplierValue = -1.0f;//same as above but with i = 0;
     public float previousTargetValue;
-    
+    public float increment = 0.5f;
+    public float minValueToRewind = -1.0f;
+    public float maxValueToRewind = -5.0f;
+
     public int i = 3; //3 is the position of the value 1, which implies normal time flow (ownTimeScale is multiplied by 1).
 
     //************************************ TIME SELECTOR SLIDER **************************************************************************************************************
@@ -46,6 +50,8 @@ public class TimeScaleControl : MonoBehaviour {
     public bool pauseHasBeenPressed = false;
     public bool rewindHasBeenPressed = false;
     public bool notSet = true;
+    private bool trigger = false;
+    bool canExtend = true;
 
     // Use this for initialization
     void Start () {
@@ -60,11 +66,21 @@ public class TimeScaleControl : MonoBehaviour {
 	void Update () {
         dt = Time.deltaTime;
 
+        float acceleratedTimeValue = timeValues[4];
+        float normalTimeValue = timeValues[3];
+        float slowedTimeValue = timeValues[2];
+        float pausedTimeValue = timeValues[1];
+        float rewindTimeValue = timeValues[0];
+
+        minTimeMultiplierValue = rewindTimeValue;
+        maxTimeMultiplierValue = acceleratedTimeValue;
+
         //--------------------------------------------------Accelerated movement of the OwnTimescale SELECTOR-------------------
-      
-        if(inputs.actionRight && inputs.rightClick)//ACCEL
+
+        if (inputs.actionRight && inputs.rightClick)//ACCEL
         {
             previousTargetValue = targetValue;
+            i = 3;
             i = 4;
             if (accelHasBeenPressed && i == 4)
             {   //Return to normal time if action is pressed again while active
@@ -83,6 +99,7 @@ public class TimeScaleControl : MonoBehaviour {
         else if(inputs.actionRight && inputs.leftClick)//SLOW
         {
             previousTargetValue = targetValue;
+            i = 3;
             i = 2;//previously i += 1;
             if (slowHasBeenPressed && i == 2)
             {   //Return to normal time if action is pressed again while active
@@ -99,14 +116,18 @@ public class TimeScaleControl : MonoBehaviour {
             }
         }
 
-        if (inputs.actionLeft && inputs.rightClick)//REWIND
+        if (inputs.actionLeft && inputs.rightClick && !trigger)//REWIND
         {
+            
             previousTargetValue = targetValue;
+            trigger = true;
+            i = 3;
             i = 0;
             if (rewindHasBeenPressed && i == 0)
             {   //Return to normal time if action is pressed again while active
                 previousTargetValue = targetValue;
                 i = 3;
+                
                 rewindHasBeenPressed = false;
             }
             else if (i == 0)
@@ -121,6 +142,7 @@ public class TimeScaleControl : MonoBehaviour {
         else if (inputs.actionLeft && inputs.leftClick)//PAUSE
         {
             previousTargetValue = targetValue;
+            i = 3;
             i = 1;//previously i-= 1;
             if (pauseHasBeenPressed && i == 1)
             {   //Return to normal time if action is pressed again while active
@@ -137,29 +159,52 @@ public class TimeScaleControl : MonoBehaviour {
             }
         }
         
-
+        if(inputs.actionLeftPressed && inputs.rightClickPressed && trigger && rewindHasBeenPressed)//Must do it better so that it can't be activated
+        {
+            
+            timeValues[0] += -increment * dt;
+            timeValues[0] = Mathf.Clamp(timeValues[0], maxValueToRewind, minValueToRewind);
+        }
+        else if(!inputs.actionLeftPressed || !inputs.rightClickPressed)
+        {
+            trigger = false;
+        }
 
         i = Mathf.Clamp(i, 0, 4);
         targetValue = timeValues[i];
 
 
         
-        if (Mathf.Sign(targetValue - previousTargetValue) != Mathf.Sign(maxSlidingSpeed))
+        if (Mathf.Sign(targetValue - previousTargetValue) != Mathf.Sign(maxSlidingSpeed))//reverse maxSlidingSpeed sign if the direction has changed
             maxSlidingSpeed *= -1;
 
 
-        if(targetValue >=0 && previousTargetValue == -1 && notSet) //Everytime we go from rewind to anything else ownTimeScale is automatically set to 0, skipping negative numbers (accelerating from -1 to 0)
+        if(targetValue >= pausedTimeValue && previousTargetValue == rewindTimeValue && notSet) //Everytime we go from rewind to anything else ownTimeScale is automatically set to 0, skipping negative numbers (accelerating from -1 to 0)
         {
+            timeValues[0] = minValueToRewind;
+            if(enableDebug)Debug.Log("Energy Exhausted, going to normal Time YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            trigger = false;
+            slidingSpeed = 0;
             ownTimeScale = 0;
             notSet = false;
         }
+
+        if (enableDebug)
+        {
+            Debug.Log("OwnTimeScale: " + ownTimeScale);
+            Debug.Log("Target: " + targetValue);
+            Debug.Log("MaxSlidingSpeed: " + maxSlidingSpeed);
+            Debug.Log("slidingSpeed: " + slidingSpeed); 
+        }
+            
 
         if (ownTimeScale != targetValue)
         {
 
             float offsetSpeed = maxSlidingSpeed - slidingSpeed;
-
+            if (enableDebug) Debug.Log("offsetSpeed: " + offsetSpeed);
             offsetSpeed = Mathf.Clamp(offsetSpeed, -slidingAcceleration * dt, slidingAcceleration * dt);
+            if (enableDebug) Debug.Log("offsetSpeedAfterClamp: " + offsetSpeed);
             slidingSpeed += offsetSpeed;
 
             ownTimeScale += slidingSpeed;
@@ -172,7 +217,7 @@ public class TimeScaleControl : MonoBehaviour {
         else slidingSpeed = 0;
 
         energyCalculation();
-        
+
         
     }
 
@@ -182,6 +227,7 @@ public class TimeScaleControl : MonoBehaviour {
        {
            case 0:
                 energy.energyAmount += energy.rewindReductionAmt * dt * ownTimeScale;
+                if (enableDebug) Debug.Log("Energy Amount: " + energy.energyAmount);
                break;
            case 1:
                energy.energyAmount -= energy.pauseReductionAmt * dt;
@@ -204,6 +250,7 @@ public class TimeScaleControl : MonoBehaviour {
         if(energy.energyAmount <= energy.minEnergyAmt)
         {
             i = 3;
+            
             previousTargetValue = targetValue;
         }
     }

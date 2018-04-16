@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PositiveTimeScript : MonoBehaviour {
 
+    #region Variables Declaration
+    public bool enableDebug;
     bool first = true;
     bool applied = true;
     private Rigidbody rb;
     private ObjectTimeLine objectTimeline;
+    private RewindScript rewindScript;
     public float direction;
 
     private Vector3 previousVelocity;
@@ -29,9 +32,13 @@ public class PositiveTimeScript : MonoBehaviour {
                 rb.velocity /= timeScale;
                 rb.angularVelocity /= timeScale;
                 
+                if(enableDebug)
+                {
                     //Debug.Log("In Timescale-Mass: " + rb.mass);
-                //Debug.Log("In Timescale-Velocity: " + rb.velocity);
-                //Debug.Log("In Timescale-AngVelocity: " + rb.angularVelocity);
+                    Debug.Log("In Timescale-Velocity: " + rb.velocity);
+                    Debug.Log("In Timescale-AngVelocity: " + rb.angularVelocity);
+                }
+
             }
             first = false;
 
@@ -43,12 +50,13 @@ public class PositiveTimeScript : MonoBehaviour {
             
         }
     }
+    #endregion
 
     void Awake()
     {
-        
         rb = gameObject.GetComponent<Rigidbody>();
         objectTimeline = gameObject.GetComponent<ObjectTimeLine>();
+        rewindScript = gameObject.GetComponent<RewindScript>();
         timeScale = _timeScale;
     }
 
@@ -56,25 +64,36 @@ public class PositiveTimeScript : MonoBehaviour {
     void Update()
     {
         direction = Mathf.Sign(objectTimeline.actualTarget - objectTimeline.previousTarget);
+
+
+        if(enableDebug)
+        {
+            Debug.Log("ownTimescale: " + objectTimeline.ownTimeScale);
+            Debug.Log("Timescale: " + timeScale);
+            Debug.Log("Velocity: " + rb.velocity);
+            Debug.Log("AngVelocity: " + rb.angularVelocity);
+        }
         
+        //                        i=    0       1      2     3          4
+        //Different TimeScale values: Rewind, Pause, Slow, Normal, Accelerated.
 
-        /*
-        Debug.Log("ownTimescale: " + objectTimeline.ownTimeScale);
-        Debug.Log("Timescale: " + timeScale);
-        Debug.Log("Velocity: " + rb.velocity);
-        Debug.Log("AngVelocity: " + rb.angularVelocity);
-        */
+        float acceleratedTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[4];
+        float normalTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[3];
+        float slowedTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[2];
+        float pausedTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[1];
+        float rewindTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[0];
 
-        //Different TimeScale values: Normal, Slow and Fast, Pause.
 
-        if (objectTimeline.ownTimeScale == 1)
+        #region Calculations of TimeScale relative to the ownTimeScale values
+
+        if (objectTimeline.ownTimeScale == normalTimeValue)
         {//             Normal
             rb.isKinematic = false;
             rb.useGravity = true;
             timeScale = 1;
-        }
-        else if (((objectTimeline.ownTimeScale > 0 && objectTimeline.ownTimeScale < 1) || objectTimeline.ownTimeScale > 1) && objectTimeline.previousTarget != -1 )
-        {//                                       Slow                                                Fast         
+        }//                                           0                                           1                                           1                                               -1
+        else if (((objectTimeline.ownTimeScale > pausedTimeValue && objectTimeline.ownTimeScale < normalTimeValue) || objectTimeline.ownTimeScale > normalTimeValue) && objectTimeline.previousTarget != rewindTimeValue )
+        {//                                                     Slow                                                                            Fast         
             rb.useGravity = false;
             rb.isKinematic = false;
 
@@ -84,62 +103,76 @@ public class PositiveTimeScript : MonoBehaviour {
                 timeScale = objectTimeline.ownTimeScale;//and being both smaller than 1, this causes extremely high numbers when very close to 0. Testing has concluded that the minimum value that timeScale should be is 0.08).
                 temporalTS = timeScale;
             }
-            else if (objectTimeline.actualTarget == -1)
+            else if (objectTimeline.actualTarget == rewindTimeValue && objectTimeline.ownTimeScale <= 0.08f)
             {
                 timeScale = 1;//If we don't set timeScale back to one here, afterwards when ownTimeScale reaches 1, the last value of timeScale (something around 0.09 will multiply the current velocity
             }
-
+            if(enableDebug)
+            {
+                if (direction < 0)
+                    Debug.Log("Slow Accel going to pause/rewind");
+                else if (direction > 0) Debug.Log("Slow Accel coming from rewind");
+            }
             
-
-
-            if (direction < 0)
-            Debug.Log("Slow Accel going to pause/rewind");
-            else if(direction > 0)  Debug.Log("Slow Accel coming from rewind");
         }
-        else if (objectTimeline.ownTimeScale == 0)
+        else if (objectTimeline.ownTimeScale == pausedTimeValue)
         {//                   Pause
-            //Debug.Log("Rigids are kinematic: We are in PAUSE");
+            if(enableDebug) Debug.Log("Rigids are kinematic: We are in PAUSE");
             rb.isKinematic = true;
             applied = false;
         }
+        #endregion
 
-        
 
+        #region Forces storage and application
 
         //Store rigidbody's velocity, angVelocity and mass before making it kinematic on pause...
-        if (direction < 0 && objectTimeline.actualTarget == 0 && objectTimeline.ownTimeScale > 0)
+        if (direction < 0 && objectTimeline.actualTarget == pausedTimeValue && objectTimeline.ownTimeScale > pausedTimeValue)
         {
-            Debug.Log("Storing velocities and stuff");
+            if (enableDebug) Debug.Log("Storing velocities for pause and stuff");
             previousVelocity = rb.velocity;
             previousAngVelocity = rb.angularVelocity;
             previousMass = rb.mass;
         }
-        else if(direction > 0 && objectTimeline.previousTarget == 0)
+        else if (direction > 0 && objectTimeline.previousTarget == pausedTimeValue)
         {//... and reapply them ONCE after no longer being paused or rewinded.
-            if(!applied)
+            if (!applied)
             {
-                Debug.Log("Applying speeds");
+                if (enableDebug) Debug.Log("Applying speeds");
                 rb.velocity = previousVelocity;
                 rb.angularVelocity = previousAngVelocity;
                 rb.mass = previousMass;
                 applied = true;
             }
-            
-        }
 
+        }
         
+        /*if (!rewindScript.isRewinding)
+        {
+            if (enableDebug) Debug.Log("It's getting INSIDEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+            if (!rewindScript.hasAppliedStop)
+            {
+                if (enableDebug)
+                {
+                    Debug.Log("Applying Rewind Values-------------------------------------------------------REW---------------------------------------------------------------------------------");
+                    Debug.Log("Velocity applied: " + rewindScript.pointsInTime[0].velocity);
+                    Debug.Log("AngularVelocity applied: " + rewindScript.pointsInTime[0].angularVelocity);
+                }
+                rb.velocity = rewindScript.pointsInTime[0].velocity;
+                rb.angularVelocity = rewindScript.pointsInTime[0].angularVelocity;//Apply forces at the end of rewind
+                rewindScript.hasAppliedStop = true;
+            }
+        }*/
+        #endregion
+
+
     }
 
     void FixedUpdate()
     {
-
         float dt = Time.fixedDeltaTime * timeScale;
-        //Debug.Log("Previous Target :" + objectTimeline.previousTarget);
-
-
-        rb.velocity += Physics.gravity / rb.mass * dt;
-
+        rb.velocity += Physics.gravity * dt;
     }
 }
 
-//Podría escribir una tesis de 100 páginas explicando únicamente cómo funciona este script y la cantidad de mierda que tuve que probar para llegar a hacerlo funcionar en todos los casos.
+//Podría escribir una tesis de 100 páginas explicando únicamente cómo funciona este script y la cantidad de m***** que tuve que probar para llegar a hacerlo funcionar en todos los casos.

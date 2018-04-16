@@ -361,6 +361,10 @@
     <Compile Include="Assets\Packs\ProCore\ProGrids\Classes\pg_SceneMeshRender.cs" />
     <Compile Include="Assets\Packs\ProCore\ProGrids\Classes\pg_Util.cs" />
     <Compile Include="Assets\Packs\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
+    <Compile Include="Assets\Packs\Simple Explosion\Demo\Script (for Demo)\ExplosionControl.cs" />
+    <Compile Include="Assets\Packs\Simple Explosion\Scripts\GraphicExplosion.cs" />
+    <Compile Include="Assets\Packs\Simple Explosion\Scripts\light_control.cs" />
+    <Compile Include="Assets\Packs\Simple Explosion\Scripts\PhysicalExplosion.cs" />
     <Compile Include="Assets\Packs\Standard Assets\Environment\Water (Basic)\Scripts\WaterBasic.cs" />
     <Compile Include="Assets\Packs\Standard Assets\Environment\Water\Water\Scripts\Displace.cs" />
     <Compile Include="Assets\Packs\Standard Assets\Environment\Water\Water\Scripts\GerstnerDisplace.cs" />
@@ -416,9 +420,18 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
     <Compile Include="Assets\Scripts\Interface Scripts\CameraEffectsController.cs" />
+    <Compile Include="Assets\Scripts\Interface Scripts\ControlTimeInterface.cs" />
+    <Compile Include="Assets\Scripts\Interface Scripts\InterfaceChangeTime.cs" />
+    <Compile Include="Assets\Scripts\Interface Scripts\InterfaceChangeWeapon.cs" />
+    <Compile Include="Assets\Scripts\Interface Scripts\UIManager.cs" />
+    <Compile Include="Assets\Scripts\ParabolicShoot.cs" />
+    <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\ApplyMovementToPlayer.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\AxisRotation.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\LiftPlatformMovement.cs" />
+    <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\MovingObjectSpeed.cs" />
+    <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\ObjectSimpleMovement.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\ObjectSineMovement.cs" />
+    <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\ScaledDeltaTime.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\Time Managment - related\ObjectTimeLine.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\Time Managment - related\PositiveTimeScript.cs" />
     <Compile Include="Assets\Scripts\Platforms, Objects and such\Moving Objects\Time Managment - related\RewindScript.cs" />
@@ -497,6 +510,7 @@
     <None Include="Assets\Packs\ProCore\ProGrids\About\changelog.txt" />
     <None Include="Assets\Packs\ProCore\ProGrids\About\pc_AboutEntry_ProGrids.txt" />
     <None Include="Assets\Packs\ProCore\ProGrids\Shader\pg_GridShader.shader" />
+    <None Include="Assets\Packs\Simple Explosion\Shader\Exposion.shader" />
     <None Include="Assets\Packs\SimpleFX\Materials\UnlitVertexColour_Alpha.shader" />
     <None Include="Assets\Packs\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Packs\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />

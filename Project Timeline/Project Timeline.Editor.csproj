@@ -457,6 +457,7 @@
     <None Include="Assets\Packs\ProCore\ProGrids\About\changelog.txt" />
     <None Include="Assets\Packs\ProCore\ProGrids\About\pc_AboutEntry_ProGrids.txt" />
     <None Include="Assets\Packs\ProCore\ProGrids\Shader\pg_GridShader.shader" />
+    <None Include="Assets\Packs\Simple Explosion\Shader\Exposion.shader" />
     <None Include="Assets\Packs\SimpleFX\Materials\UnlitVertexColour_Alpha.shader" />
     <None Include="Assets\Packs\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Packs\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />

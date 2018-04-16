@@ -9,9 +9,13 @@ public class Inputs : MonoBehaviour {
     public bool jump;
     public bool jumpBool;
     public bool leftClick;
+    public bool leftClickPressed;
     public bool rightClick;
+    public bool rightClickPressed;
     public bool actionRight;
+    public bool actionRightPressed;
     public bool actionLeft;
+    public bool actionLeftPressed;
     public bool modifier;
     public bool activate;
     public bool submit;
@@ -40,10 +44,14 @@ public class Inputs : MonoBehaviour {
         jump = Input.GetButton("Jump");
 
         leftClick = Input.GetButton("LeftClick");
+        leftClickPressed = Input.GetButton("LeftClick");
         rightClick = Input.GetButton("RightClick");
+        rightClickPressed = Input.GetButton("RightClick");
 
         actionRight = Input.GetButtonDown("ActionRight");
+        actionRightPressed = Input.GetButton("ActionRight");
         actionLeft = Input.GetButtonDown("ActionLeft");
+        actionLeftPressed = Input.GetButton("ActionLeft");
         modifier = Input.GetButton("Modifier");
 
         activate = Input.GetButtonDown("Activate");

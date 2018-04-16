@@ -54,9 +54,20 @@ public class CanvasUpdater : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(timeScaleControl != null && timeScaleControl.energy != null)
-        changeUI();
-        currentTime.text = timeManagerScript.currentTime.ToString("#.00");
+
+        float acceleratedTimeValue = timeManagerScript.timeScaleControl.timeValues[4];
+        float normalTimeValue = timeManagerScript.timeScaleControl.timeValues[3];
+        float slowedTimeValue = timeManagerScript.timeScaleControl.timeValues[2];
+        float pausedTimeValue = timeManagerScript.timeScaleControl.timeValues[1];
+        float rewindTimeValue = timeManagerScript.timeScaleControl.timeValues[0];
+
+
+        if (timeScaleControl != null && timeScaleControl.energy != null)
+        {
+            changeUI();
+            currentTime.text = timeManagerScript.currentTime.ToString("#.00");
+        }
+        
 	}
 
     void changeUI()

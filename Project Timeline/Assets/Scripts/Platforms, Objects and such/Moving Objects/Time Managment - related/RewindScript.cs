@@ -26,44 +26,54 @@ public struct PointInTime
 
 public class RewindScript : MonoBehaviour {
 
+#region Variables Declaration
     private Rigidbody rb;
     private ObjectTimeLine objectTimeline;
     private PositiveTimeScript positiveTimeScript;
+    public bool enableDebug = false;
 
+    //General Variables----------------------------------------------------------------------------------------
     private float recordInterval = 0.1f;
-    private List<PointInTime> pointsInTime;
-    public float currentTime;
+    public List<PointInTime> pointsInTime;
+    private float currentTime;
     public bool isRewinding = false;
     public float recordTime = 5f;
     public bool hasAppliedStop = true;
     public float counter = 0;
-    public float t = 0;
-    public bool canInitializeLerp = true;
+    private float t = 0;
+    private bool canInitializeLerp = true;
 
-    int number = 0;
+    int number = 0;//Debugging variable
 
+    //Lerping stuff--------------------------------------------------------------------------------------------
     Vector3 initialPos;
     Quaternion initialRot;
     float initialTime;
     float targetTime;
+    float lerper;//redundant variable, can be replaced by currentTime.
+#endregion
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         pointsInTime = new List<PointInTime>();
         rb = gameObject.GetComponent<Rigidbody>();
         objectTimeline = gameObject.GetComponent<ObjectTimeLine>();
         positiveTimeScript = gameObject.GetComponent<PositiveTimeScript>();
+        counter = 0;
         pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime, number));
     }
 
     // Update is called once per frame
     void Update()
     {
+        float pausedTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[1];
+        float rewindTimeValue = objectTimeline.timeManagerScript.timeScaleControl.timeValues[0];
+
         currentTime = objectTimeline.timeManagerScript.currentTime;
 
-        if (objectTimeline.ownTimeScale < 0)
+        if (objectTimeline.ownTimeScale < pausedTimeValue)
             isRewinding = true;
-        else if(objectTimeline.actualTarget != -1)
+        else if(objectTimeline.actualTarget != rewindTimeValue)
         {
             isRewinding = false;
         }
@@ -90,60 +100,68 @@ public class RewindScript : MonoBehaviour {
 
     }
 
-    
+#region Functions    
 
     void Record()
     {
         
-        counter += Mathf.Abs(objectTimeline.scaledDT);//Abs is a safeguard against negative scaledDeltaTimes when coming back from rewind to normal time
-        if (counter >= recordInterval)
-        {
-            /*if (pointsInTime[pointsInTime.Count - 1].recordingTime - currentTime > 5.0f)//If the time elapsed between NOW and the last element on the list is greater than 5 seconds, delete it.
-            {
-                pointsInTime.RemoveAt(pointsInTime.Count - 1);
-            }*/
-            number += 1;
-            pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime, number));
-            Debug.Log("PointInTimeInserted: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
-            counter = 0;
-        }
         
+        if (counter >= recordInterval)
+        { 
+            pointsInTime.Insert(0, new PointInTime(transform, rb.velocity, rb.angularVelocity, currentTime, number));
+            if (enableDebug) Debug.Log("PointInTimeInserted: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
+
+            if (currentTime - pointsInTime[pointsInTime.Count - 1].timeWhenRecorded > recordTime)//If the time elapsed between NOW and the last element on the list is greater than 5 seconds, delete it.
+            {
+                if (enableDebug) Debug.Log("PointRemoved with time: " + pointsInTime[pointsInTime.Count - 1].timeWhenRecorded);
+                pointsInTime.RemoveAt(pointsInTime.Count - 1);
+            }
+
+            number += 1;
+            counter = 0;
+
+        }
+        counter += Mathf.Abs(objectTimeline.scaledDT);//Abs is a safeguard against negative scaledDeltaTimes when coming back from rewind to normal time, which shouldn't happen but hey.
     }
     
-    
-
     void Rewind()
     {
         if (pointsInTime.Count > 1)
         {
-            //first take the initial position and time and the target position and time
             
-
             PointInTime pointInTime = pointsInTime[0];
-            //transform.position = pointInTime.position;
-            //transform.rotation = pointInTime.rotation;
+
+            //First take the initial position and time and the target position and time
             if (currentTime != pointInTime.timeWhenRecorded && canInitializeLerp)
             {
                 initialPos = transform.position;
                 initialRot = transform.rotation;
                 initialTime = currentTime;
                 canInitializeLerp = false;
-                t = 0;
+                t = 0;//t must be zero every time we begin a new lerp section
+                lerper = initialTime;
             }
 
-            //Extract the value from 0 to 1 in between the time at which the lerp commenced and the time at which it will end
-            Debug.Log("t+="+ (1 / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime)) * (objectTimeline.scaledDT * -1));
-            t += (1 / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime)) * (objectTimeline.scaledDT * -1);
-            t = Mathf.Clamp01(t);
-            Debug.Log("t =" + t);
+            //Calculate T as a fraction of the current Time - initialTime divided by the time between the points A & B of the lerp. the variable Lerper can be replaced by currentTime, and the result is the same, 
+            //although I think this way I have more control over what goes into the division. Maybe I'm wrong.
+
+            t = (Mathf.Abs(currentTime - initialTime)) / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime);//Calculation for t
+
+            lerper -= objectTimeline.scaledDT * -1;//the scaled delta time here is negative, so to remove it from t we must invert it.
+            lerper = Mathf.Clamp(lerper, pointInTime.timeWhenRecorded, initialTime);//after (timeWhenRecorded-initialTime) seconds, lerper == timeWhenRecorded, making t = 1.
+
+            t = Mathf.Clamp01(t);//just in case
+            
+
             transform.position = Vector3.Lerp(initialPos, pointInTime.position, t);
             transform.rotation = Quaternion.Slerp(initialRot, pointInTime.rotation, t);
 
             if (pointsInTime != null && currentTime <= pointInTime.timeWhenRecorded)
             {
-                t = 0;
-                Debug.Log("PointInTimeRemoved: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
+                if (enableDebug) Debug.Log("PointInTimeRemoved: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
                 pointsInTime.RemoveAt(0);
+                t = 0;
+                lerper = initialTime;
                 number -= 1;
                 canInitializeLerp = true;
             }
@@ -153,8 +171,8 @@ public class RewindScript : MonoBehaviour {
         {
             
             PointInTime pointInTime = pointsInTime[0];
-            transform.position = pointInTime.position;
-            transform.rotation = pointInTime.rotation;
+            //transform.position = pointInTime.position;
+            //transform.rotation = pointInTime.rotation;
             
         }
         
@@ -168,19 +186,20 @@ public class RewindScript : MonoBehaviour {
 
     public void StopRewind()
     {
-        t = 0;
+        
         rb.isKinematic = false;
         ReapplyForces();
-        canInitializeLerp = true;
+        canInitializeLerp = true;//Super important
     }
 
     void ReapplyForces()
     {
-        Debug.Log("Applying Velocity:" + pointsInTime[0].velocity + "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        Debug.Log("Applying AngularVelocity:" + pointsInTime[0].angularVelocity);
-        rb.position = pointsInTime[0].position;
-        rb.rotation = pointsInTime[0].rotation;
+        if (enableDebug) Debug.Log("Applying Velocity:" + pointsInTime[0].velocity + "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        if (enableDebug) Debug.Log("Applying AngularVelocity:" + pointsInTime[0].angularVelocity);
+        
         rb.velocity = pointsInTime[0].velocity;
         rb.angularVelocity = pointsInTime[0].angularVelocity;
     }
+
+    #endregion
 }
