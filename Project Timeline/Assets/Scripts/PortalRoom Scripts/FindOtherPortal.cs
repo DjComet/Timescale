@@ -16,10 +16,14 @@ public class FindOtherPortal : MonoBehaviour {
         if(this.tag == "PortalA")
         {
             GameObject roomChange = GameObject.FindGameObjectWithTag("OriginalRoomChange");
-            GameObject roomChangeCopy = GameObject.Instantiate(roomChange, 
-                transform.position + GameObject.FindGameObjectWithTag("OriginalRoom").GetComponent<CopyRoom>().pos, 
-                Quaternion.Euler(GameObject.FindGameObjectWithTag("OriginalRoom").GetComponent<CopyRoom>().rot));
-            roomChangeCopy.tag = "CopyRoomChange";
+            if(GameObject.FindGameObjectWithTag("OriginalRoom")!= null)
+            {
+                GameObject roomChangeCopy = GameObject.Instantiate(roomChange,
+                    transform.position + GameObject.FindGameObjectWithTag("OriginalRoom").GetComponent<CopyRoom>().pos,
+                    Quaternion.Euler(GameObject.FindGameObjectWithTag("OriginalRoom").GetComponent<CopyRoom>().rot));
+                roomChangeCopy.tag = "CopyRoomChange";
+            }
+            
         }
 
 	}

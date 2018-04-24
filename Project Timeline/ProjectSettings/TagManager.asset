@@ -16,6 +16,8 @@ TagManager:
   - OriginalRoomChange
   - CopyRoomChange
   - CanCreatePortal
+  - PortalPref
+  - RayInteract
   layers:
   - Default
   - TransparentFX

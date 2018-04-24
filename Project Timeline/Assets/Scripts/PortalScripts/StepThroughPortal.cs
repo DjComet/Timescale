@@ -25,7 +25,7 @@ public class StepThroughPortal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player" || other.tag == "CanGoThroughPortals")
+        if (other.tag == "Player" || other.tag == "CanGoThroughPortals" || other.tag == "Main Camera")
         {
 
             angleOfPlayer = Vector3.Angle(gameObject.transform.forward, other.transform.forward);

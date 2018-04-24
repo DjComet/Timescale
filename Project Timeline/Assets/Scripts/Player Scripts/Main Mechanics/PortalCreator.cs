@@ -5,9 +5,14 @@ using UnityEngine;
 public class PortalCreator : MonoBehaviour {
 
     public GameObject PortalPref;
+    public GameObject portalPrefA;
+    public GameObject portalPrefB;
 
     private Transform camera;
     private GameObject portal;
+    private GameObject portalA;
+    private GameObject portalB;
+
 
     // Use this for initialization
     void Start () {
@@ -27,15 +32,29 @@ public class PortalCreator : MonoBehaviour {
             {
                 if (hit.collider.tag == "CanCreatePortal")
                 {
-                    if(!portal)
-                        portal = GameObject.Instantiate(PortalPref, hit.transform.position, Quaternion.Euler(hit.normal));
-
+                    if (!portal)
+                    {
+                        portal = GameObject.Instantiate(PortalPref, new Vector3(hit.point.x, hit.transform.position.y, hit.point.z), Quaternion.LookRotation(hit.normal, hit.transform.up));
+                    }
                     else
                     {
-                        portal.transform.position = hit.transform.position;
-                        portal.transform.rotation = Quaternion.Euler(hit.normal);
+                        portal.transform.position = new Vector3(hit.point.x, hit.transform.position.y, hit.point.z);
+                        portal.transform.rotation = Quaternion.LookRotation(hit.normal, hit.transform.up);
                     }
                 }
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (!portalA)
+            {
+                portalA = GameObject.Instantiate(portalPrefA, portal.transform.position, portal.transform.rotation);
+                GameObject.Destroy(portal);
+            }
+            else if (!portalB)
+            {
+                portalB = GameObject.Instantiate(portalPrefB, portal.transform.position, portal.transform.rotation);
+                GameObject.Destroy(portal);
             }
         }
 		

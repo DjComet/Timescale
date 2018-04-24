@@ -147,11 +147,11 @@ public class RewindScript : MonoBehaviour {
 
             t = (Mathf.Abs(currentTime - initialTime)) / Mathf.Abs(pointInTime.timeWhenRecorded - initialTime);//Calculation for t
 
-            lerper -= objectTimeline.scaledDT * -1;//the scaled delta time here is negative, so to remove it from t we must invert it.
-            lerper = Mathf.Clamp(lerper, pointInTime.timeWhenRecorded, initialTime);//after (timeWhenRecorded-initialTime) seconds, lerper == timeWhenRecorded, making t = 1.
+            //lerper -= objectTimeline.scaledDT * -1;//the scaled delta time here is negative, so to remove it from t we must invert it.
+            //lerper = Mathf.Clamp(lerper, pointInTime.timeWhenRecorded, initialTime);//after (timeWhenRecorded-initialTime) seconds, lerper == timeWhenRecorded, making t = 1.
 
             t = Mathf.Clamp01(t);//just in case
-            
+            if (enableDebug) Debug.Log("t:" + t);
 
             transform.position = Vector3.Lerp(initialPos, pointInTime.position, t);
             transform.rotation = Quaternion.Slerp(initialRot, pointInTime.rotation, t);
@@ -161,7 +161,7 @@ public class RewindScript : MonoBehaviour {
                 if (enableDebug) Debug.Log("PointInTimeRemoved: pos " + pointsInTime[0].position + " vel " + pointsInTime[0].velocity + " ang vel " + pointsInTime[0].angularVelocity + " timeWhenRecorded " + pointsInTime[0].timeWhenRecorded + " number " + pointsInTime[0].number);
                 pointsInTime.RemoveAt(0);
                 t = 0;
-                lerper = initialTime;
+                //lerper = initialTime;
                 number -= 1;
                 canInitializeLerp = true;
             }

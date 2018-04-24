@@ -8,7 +8,7 @@ public class ObjectSineMovement : MonoBehaviour {
     //Linear movement, sine movement, axis of movement
     private TimeScaleControl timeScale;
     private ObjectTimeLine objectTimeLine;
-    private MovingObjectSpeed movingObjectSpeed;
+    private ApplyMovementToPlayer applyMovementToPlayer;
     public bool worldSpace;
 
     public float sineFrequency = 1f;
@@ -27,11 +27,11 @@ public class ObjectSineMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if (!gameObject.GetComponent<MovingObjectSpeed>())
+        if (!gameObject.GetComponent<ApplyMovementToPlayer>())
         {
-            gameObject.AddComponent<MovingObjectSpeed>();
+            gameObject.AddComponent<ApplyMovementToPlayer>();
         }
-        movingObjectSpeed = gameObject.GetComponent<MovingObjectSpeed>();
+        applyMovementToPlayer = gameObject.GetComponent<ApplyMovementToPlayer>();
 
         objectTimeLine = gameObject.GetComponent<ObjectTimeLine>();
         position = transform.position;
@@ -65,8 +65,8 @@ public class ObjectSineMovement : MonoBehaviour {
         
         sine();
 
-        movingObjectSpeed.speedMagnitude = speedMagnitude ;
-        movingObjectSpeed.speedVector = speedVector ;
+        applyMovementToPlayer.speedMagnitude = speedMagnitude ;
+        applyMovementToPlayer.speedVector = speedVector ;
 	}
     void sine()
     {

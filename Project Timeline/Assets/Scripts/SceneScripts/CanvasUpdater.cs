@@ -10,9 +10,12 @@ public class CanvasUpdater : MonoBehaviour {
     private Text mouseClickHint;
     private Slider energySlider;
     private Text currentTime;
+    private Image crosshair;
+
     private GameObject player;
     private TimeScaleControl timeScaleControl;
     private TimeManagerScript timeManagerScript;
+    private LookAndInteract lookAndInteract;
 
     private float energyAmount;
 
@@ -22,6 +25,7 @@ public class CanvasUpdater : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         inputs = player.GetComponent<Inputs>();
         timeScaleControl = player.GetComponent<TimeScaleControl>();
+        lookAndInteract = player.GetComponent<LookAndInteract>();
         timeManagerScript = gameObject.GetComponent<TimeManagerScript>();
 
         for (int i = 0; i < playerCanvas.transform.childCount; i++)
@@ -49,6 +53,10 @@ public class CanvasUpdater : MonoBehaviour {
             {
                 currentTime = child.GetComponent<Text>();
             }
+            else if(child.name == "Crosshair")
+            {
+                crosshair = child.GetComponent<Image>();
+            }
         }
     }
 	
@@ -67,7 +75,8 @@ public class CanvasUpdater : MonoBehaviour {
             changeUI();
             currentTime.text = timeManagerScript.currentTime.ToString("#.00");
         }
-        
+
+        changeCrosshairColor();
 	}
 
     void changeUI()
@@ -103,5 +112,18 @@ public class CanvasUpdater : MonoBehaviour {
         }
         else mouseClickHint.text = ("");
 
+    }
+
+    void changeCrosshairColor()
+    {
+        if(lookAndInteract.rayHit)
+        {
+            crosshair.color = Color.green;
+            
+        }
+        else
+        {
+            crosshair.color = Color.black;
+        }
     }
 }

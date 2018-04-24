@@ -24,6 +24,7 @@ public class TimeScaleControl : MonoBehaviour {
     private Inputs inputs;
     public EnergyMeter energy;
     public bool enableDebug = false;
+    public bool resetToNormalTime = false;
 
     //************************************ TIME TARGETS, ARRAY AND CONTROL ***************************************************************************************************
     public float[] timeValues;
@@ -218,6 +219,11 @@ public class TimeScaleControl : MonoBehaviour {
 
         energyCalculation();
 
+        if(resetToNormalTime)
+        {
+            resetToNormal();
+            resetToNormalTime = false;//Safeguard to not reset more than once
+        }
         
     }
 
@@ -249,10 +255,14 @@ public class TimeScaleControl : MonoBehaviour {
         energy.energyAmount = Mathf.Clamp(energy.energyAmount, energy.minEnergyAmt, energy.maxEnergyAmt);
         if(energy.energyAmount <= energy.minEnergyAmt)
         {
-            i = 3;
-            
-            previousTargetValue = targetValue;
+            resetToNormal();
         }
     }
     
+    void resetToNormal()
+    {
+        i = 3;
+
+        previousTargetValue = targetValue;
+    }
 }

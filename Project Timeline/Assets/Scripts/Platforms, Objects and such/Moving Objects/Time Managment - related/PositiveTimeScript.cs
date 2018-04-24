@@ -107,7 +107,8 @@ public class PositiveTimeScript : MonoBehaviour {
             {
                 timeScale = 1;//If we don't set timeScale back to one here, afterwards when ownTimeScale reaches 1, the last value of timeScale (something around 0.09 will multiply the current velocity
             }
-            if(enableDebug)
+
+            if (enableDebug)
             {
                 if (direction < 0)
                     Debug.Log("Slow Accel going to pause/rewind");
